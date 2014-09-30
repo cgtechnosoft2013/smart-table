@@ -1,7 +1,3 @@
-SmartTableBundle_main:
-    resource: "@SDLabSmartTableBundle/Controller/"
-    type:     annotation
-    prefix:   /
 
 SmartTableBundle_test:
     resource: "@SDLabSmartTableBundle/Test/Controller/"
