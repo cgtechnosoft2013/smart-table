@@ -1,0 +1,46 @@
+{
+    "name": "sdlab/smart-table-bundle",
+    "type": "symfony-bundle",
+    "description": "SDLab : SmartTable bundle",
+    "target-dir": "SDLab/Bundle/SmartTableBundle",
+    "require": {
+        "php":                           ">=5.3.3",
+        "symfony/symfony":               "2.5.*",
+        "sensio/distribution-bundle":    "~3.0",
+        "sensio/framework-extra-bundle": "~3.0",
+        "doctrine/orm":                  "~2.2,>=2.2.3",
+        "doctrine/doctrine-bundle":      "~1.2"
+    },
+    "require-dev": {
+        "behat/behat":                  "~2.4",
+        "behat/symfony2-extension":     "~1.0",
+        "behat/mink-extension":         "~1.0",
+        "behat/mink-goutte-driver":     "*",
+        "behat/mink-selenium2-driver":  "*",
+        
+        "symfony/monolog-bundle":       "~2.1",
+        "components/jquery":            "*",
+        "components/bootstrap":         "*"
+    },
+    "config": {
+        "component-dir": "vendor",
+        "bin-dir": "bin/"
+    },
+    "autoload": {
+        "psr-0": { 
+            "Test\\Script\\ScriptHandler" : "",
+            "SDLab\\Bundle\\SmartTableBundle": ""
+        }
+    },
+    "target-dir": "SDLab/Bundle/SmartTableBundle",
+    "scripts": {
+        "post-install-cmd": [
+            "Test\\Script\\ScriptHandler::addComponentsSymlink",
+            "Test\\Script\\ScriptHandler::addJSSymlink"
+        ],
+        "post-update-cmd": [
+            "Test\\Script\\ScriptHandler::addComponentsSymlink",
+            "Test\\Script\\ScriptHandler::addJSSymlink"
+        ]
+    }
+}

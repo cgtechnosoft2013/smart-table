@@ -1,0 +1,18 @@
+default:
+    extensions:
+        Behat\Symfony2Extension\Extension:
+            mink_driver: true
+            kernel:
+              env: test
+              debug: true
+              path: Test/Framework/AppKernel.php
+        Behat\MinkExtension\Extension:
+            base_url: "http://192.168.33.31:81/app.php"
+            default_session: selenium2
+            selenium2:
+                wd_host: "http://localhost:8643/wd/hub"
+    paths:
+        features: Test/Features
+    context:
+        class:  SDLab\Bundle\SmartTableBundle\Test\Features\Context\FeatureContext
+                
