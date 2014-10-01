@@ -1,0 +1,8 @@
+parameters:
+
+
+services:
+
+    sdlab.smart_table.test.base.manager:
+        class: SDLab\Bundle\SmartTableBundle\Test\TableManager\BaseTableManager
+        arguments: [@doctrine.orm.entity_manager]

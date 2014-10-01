@@ -1,0 +1,63 @@
+{% extends 'SDLabSmartTableBundle::base.html.twig' %}
+
+{% block body %}
+
+<h2>Basic</h2>
+    
+
+<table id="test-table-base"
+        class="table table-condensed table-striped table-bordered table-hover"
+        data-lang-url="{{ asset('js/data-table-french.lang') }}"
+        data-fetch-url="{{ path('table-base-data') }}"
+        {#
+        data-editable-url="{{ path('plan_training_training_updatefield', {'id': '__training-id__'}) }}"                                    
+        data-upload_folder="{{folder}}"
+        data-splitprocess_init="{{ path('splitprocess_init', {'alias' : '__alias__', 'folder': '__folder__' }) }}"
+        data-splitprocess_init_no_folder="{{ path('splitprocess_init', {'alias' : '__alias__' }) }}"
+        data-splitprocess_step="{{ path('splitprocess_step', {'id': '__id__'}) }}"                                    
+        data-training_dowload="{{ path('table_download', {'id': '__id__'}) }}"
+        data-upload_path="{{ path('plan_training_upload_upload', { 'folder': '__folder__' }) }}"
+        data-load_report="{{ path('plan_training_upload_dataLoadReport', {'id': '__id__'}) }}"
+        data-add_training="{{ path('add_training') }}"
+        data-delete_training_filtered ="{{path('delete_training_filtered')}}"
+        data-delete_training_ids="{{path('delete_training_ids')}}"
+        #}
+>
+    <thead>
+        <tr class="txt-color-white">
+            <th class="bg-color-redLight">ID</th>
+            <th class="bg-color-redLight">Column 1</th>
+            <th class="bg-color-redLight">Column 2</th>
+            <th class="bg-color-redLight">Column 3</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
+        </tr>
+    </tbody>
+</table>
+        
+<script>
+    
+    var fetchUrl = $('#test-table-base').data('fetch-url');
+    var langUrl = $('#test-table-base').data('lang-url');
+    
+    $('#test-table-base').dataTable({
+        "sAjaxSource": fetchUrl,
+        "sServerMethod": "POST",
+        "serverSide": true,
+        //"processing": true,
+        "language": { "url": langUrl },
+        "aoColumnDefs": [
+            {"aTargets": [0], "data": "id", "sName": "id", "sClass": ""},
+            {"aTargets": [1], "data": "colA", "sName": "colA", "sClass": ""},
+            {"aTargets": [2], "data": "colB", "sName": "colB", "sClass": ""},
+            {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""},
+        ],
+    });
+    
+    
+</script>
+        
+{% endblock body %}

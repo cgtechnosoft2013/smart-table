@@ -25,5 +25,10 @@ class SDLabSmartTableExtension extends Extension
         $loader = new Loader\YamlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.yml');
         
+        $env = $container->getParameter('kernel.environment');
+        if($env == 'test') {
+            $loader->load('services_test.yml');
+        }
+        
     }
 }
