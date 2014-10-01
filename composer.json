@@ -21,7 +21,8 @@
         "doctrine/doctrine-fixtures-bundle": "2.2.*",
         "symfony/monolog-bundle":       "~2.1",
         "components/jquery":            "*",
-        "components/bootstrap":         "*"
+        "components/bootstrap":         "*",
+        "components/font-awesome":      "*"
     },
     "config": {
         "component-dir": "vendor",
@@ -37,11 +38,13 @@
     "scripts": {
         "post-install-cmd": [
             "Test\\Script\\ScriptHandler::addComponentsSymlink",
-            "Test\\Script\\ScriptHandler::addJSSymlink"
+            "Test\\Script\\ScriptHandler::addJSSymlink",
+            "Test\\Script\\ScriptHandler::addCssSymlink"
         ],
         "post-update-cmd": [
             "Test\\Script\\ScriptHandler::addComponentsSymlink",
-            "Test\\Script\\ScriptHandler::addJSSymlink"
+            "Test\\Script\\ScriptHandler::addJSSymlink",
+            "Test\\Script\\ScriptHandler::addCssSymlink"
         ]
     }
 }

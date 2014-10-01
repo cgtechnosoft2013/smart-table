@@ -43,20 +43,37 @@
     var fetchUrl = $('#test-table-base').data('fetch-url');
     var langUrl = $('#test-table-base').data('lang-url');
     
-    $('#test-table-base').dataTable({
-        "sAjaxSource": fetchUrl,
+    var $table = $('#test-table-base').dataTable({
         "sServerMethod": "POST",
         "serverSide": true,
-        //"processing": true,
+        "processing": true,
         "language": { "url": langUrl },
+        "dom": '<"top"i>t<"clear"><"col-lg-8 col-lg-offset-4"<"#pagination"p>>',
         "aoColumnDefs": [
             {"aTargets": [0], "data": "id", "sName": "id", "sClass": ""},
             {"aTargets": [1], "data": "colA", "sName": "colA", "sClass": ""},
             {"aTargets": [2], "data": "colB", "sName": "colB", "sClass": ""},
-            {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""},
+            {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""}
         ],
+        "ajax": {
+            "url": fetchUrl,
+            "type": "POST",
+            "data": function ( d ) {
+                //d.fastSearch = "myValue";
+            }
+        }
     });
     
+    $('#test-table-base').on('preXhr.dt', function(){
+        $(this).loadingOverlay('init', {
+            loaderType      : 'i',
+            loaderClass     : 'fa fa-cog fa-spin fa-3x ajax-overlay-loader'
+        });
+    });
+    
+    $('#test-table-base').on('xhr.dt', function(){
+        $(this).loadingOverlay('remove');
+    } );
     
 </script>
         

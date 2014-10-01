@@ -16,8 +16,8 @@ class BaseRepository extends EntityRepository
                 ->setMaxResults($limit)
         ;
         
-        foreach($sort as $column => $direction) {
-            $qb->addOrderBy('t.'.$column, $direction);
+        foreach($sort as $sortArray) {
+            $qb->addOrderBy('t.'.$sortArray['columnName'], $sortArray['dir']);
         }
         
         // perform fast search OR custum search

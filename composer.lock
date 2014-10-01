@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "dd38ae1f31afb2caf884784d05a2ee79",
+    "hash": "de5f34d905fb2f5aac05a00391cd0441",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -1582,6 +1582,46 @@
                 "css"
             ],
             "time": "2014-09-03 07:11:25"
+        },
+        {
+            "name": "components/font-awesome",
+            "version": "4.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/components/font-awesome.git",
+                "reference": "86dd6f76a251d5a5e4987ab4071d5da40837bdd4"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/components/font-awesome/zipball/86dd6f76a251d5a5e4987ab4071d5da40837bdd4",
+                "reference": "86dd6f76a251d5a5e4987ab4071d5da40837bdd4",
+                "shasum": ""
+            },
+            "require": {
+                "robloach/component-installer": "*"
+            },
+            "type": "component",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "4.2.x-dev"
+                },
+                "component": {
+                    "styles": [
+                        "css/font-awesome.css"
+                    ],
+                    "files": [
+                        "css/font-awesome.min.css",
+                        "fonts/*"
+                    ]
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT",
+                "OFL-1.1"
+            ],
+            "description": "The iconic font designed for use with Twitter Bootstrap.",
+            "time": "2014-09-09 13:48:41"
         },
         {
             "name": "components/jquery",
