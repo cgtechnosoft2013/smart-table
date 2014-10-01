@@ -26,14 +26,14 @@ abstract class BaseTableManager
     /**
      * @var string
      */
-    protected $fastSearch = self::NO_SEARCH;
+    protected $fastSearch;
     
     /**
      * NO_SEARCH | FAST_SEARCH | CUSTOM_SEARCH
      * 
      * @var intager 
      */
-    protected $searchType;
+    protected $searchType = self::NO_SEARCH;
 
     /**
      * columnName => sortDirection
@@ -72,6 +72,18 @@ abstract class BaseTableManager
         return $this;
     }
 
+    public function extactSearch()
+    {
+        $this->searchType = $this->request->get('searchType', self::NO_SEARCH);
+
+        if($this->searchType == self::FAST_SEARCH) {
+            $this->extractFastSearchData();
+        } elseif($this->searchType == self::CUSTOM_SEARCH) {
+            $this->extractCustomSearchData();
+        }
+    }
+    
+    
     /**
      * Extract FastSearch data form request :
      * POST param "fastSearch"
@@ -80,7 +92,7 @@ abstract class BaseTableManager
     {
         $fastSearch = $this->request->get('fastSearch', null);
         
-        if($this->searchType == self::NO_SEARCH && null != $fastSearch && '' != $fastSearch) {
+        if($this->searchType == self::FAST_SEARCH && null != $fastSearch && '' != $fastSearch) {
             
             $this->searchType = self::FAST_SEARCH;
             $this->fastSearch = $fastSearch;
@@ -93,8 +105,8 @@ abstract class BaseTableManager
      */
     protected function extractCustomSearchData()
     {
-        if($this->searchType == self::FAST_SEARCH) {
-            return null;
+        if($this->searchType != self::CUSTOM_SEARCH) {
+            return;
         }
         
         foreach($this->request->request->all() as $key => $value) {
@@ -115,7 +127,7 @@ abstract class BaseTableManager
      */
     protected function getParamValue($value)
     {
-        if (strpos(self::PARAM_LIST_SEPARATOR, $value) != -1) {
+        if (strpos($value, self::PARAM_LIST_SEPARATOR) !== false) {
             return explode(self::PARAM_LIST_SEPARATOR, $value);
         }
         
@@ -156,8 +168,7 @@ abstract class BaseTableManager
      */
     public function getJsonResponse()
     {
-        $this->extractFastSearchData();
-        $this->extractCustomSearchData();
+        $this->extactSearch();
         $this->extractSort();
         $this->extactLimits();
         

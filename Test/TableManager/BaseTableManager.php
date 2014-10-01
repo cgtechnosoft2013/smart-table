@@ -27,7 +27,7 @@ class BaseTableManager extends AbstractTableManager
         $rows = $this->entityManager
                 ->getRepository('SDLab\Bundle\SmartTableBundle\Test\Entity\Base')
                 ->findForTable(
-                $this->fastSearch, $this->customSearch, $this->sort, $this->offset, $this->limit
+                $this->searchType, $this->fastSearch, $this->customSearch, $this->sort, $this->offset, $this->limit
         );
         return $rows;
     }
@@ -46,7 +46,7 @@ class BaseTableManager extends AbstractTableManager
         $rows = $this->entityManager
                 ->getRepository('SDLab\Bundle\SmartTableBundle\Test\Entity\Base')
                 ->findForTable(
-                $this->fastSearch, $this->customSearch, $this->sort
+                $this->searchType, $this->fastSearch, $this->customSearch
         );
         return count($rows);
     }

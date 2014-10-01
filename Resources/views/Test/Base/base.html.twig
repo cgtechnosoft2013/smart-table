@@ -4,77 +4,116 @@
 
 <h2>Basic</h2>
     
+{# outside Page number selection #}
+<div class="table-page-nb col-sm-2 col-sm-offset-2">
+    <div class="btn-group">
+        <button class="btn dropdown-toggle btn-default" data-toggle="dropdown">
+            Per page <i class="fa fa-caret-down"></i>
+        </button>
+        <ul class="dropdown-menu pull-right">
+            <li class="active"><a data-page-length="10" href="javascript:void(0);">10</a></li>
+            <li><a data-page-length="15" href="javascript:void(0);">15</a></li>
+            <li><a data-page-length="20" href="javascript:void(0);">20</a></li>
+            <li><a data-page-length="50" href="javascript:void(0);">50</a></li>
+        </ul>
+    </div>
+</div>
 
-<table id="test-table-base"
-        class="table table-condensed table-striped table-bordered table-hover"
-        data-lang-url="{{ asset('js/data-table-french.lang') }}"
-        data-fetch-url="{{ path('table-base-data') }}"
-        {#
-        data-editable-url="{{ path('plan_training_training_updatefield', {'id': '__training-id__'}) }}"                                    
-        data-upload_folder="{{folder}}"
-        data-splitprocess_init="{{ path('splitprocess_init', {'alias' : '__alias__', 'folder': '__folder__' }) }}"
-        data-splitprocess_init_no_folder="{{ path('splitprocess_init', {'alias' : '__alias__' }) }}"
-        data-splitprocess_step="{{ path('splitprocess_step', {'id': '__id__'}) }}"                                    
-        data-training_dowload="{{ path('table_download', {'id': '__id__'}) }}"
-        data-upload_path="{{ path('plan_training_upload_upload', { 'folder': '__folder__' }) }}"
-        data-load_report="{{ path('plan_training_upload_dataLoadReport', {'id': '__id__'}) }}"
-        data-add_training="{{ path('add_training') }}"
-        data-delete_training_filtered ="{{path('delete_training_filtered')}}"
-        data-delete_training_ids="{{path('delete_training_ids')}}"
-        #}
->
-    <thead>
-        <tr class="txt-color-white">
-            <th class="bg-color-redLight">ID</th>
-            <th class="bg-color-redLight">Column 1</th>
-            <th class="bg-color-redLight">Column 2</th>
-            <th class="bg-color-redLight">Column 3</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
-        </tr>
-    </tbody>
-</table>
+<div class="col-sm-2">
+    <input id="fast-search" type="text" class="form-control" placeholder="Fast search" />
+    <button id="fast-search-launch" class="btn btn-default launch">Search</a>
+    <button id="fast-search-launch" class="btn btn-default reset">Reset</a>
+</div>
+
+<div class="col-sm-2">
+    <input id="custom-search-1" data-custom-search-name="key1" type="text" class="form-control custom-search" placeholder="Custom Search1" />
+    <input id="custom-search-2" data-custom-search-name="key2" type="text" class="form-control custom-search" placeholder="Custom Search2" />
+    <select id="custom-search-3" data-custom-search-name="key3" type="text" class="form-control custom-search">
+        <option value="">Please select</option>
+        <option value="1">Valeur 1</option>
+        <option value="2">Valeur 2</option>
+    </select>
+    <select id="custom-search-4" data-custom-search-name="key4" type="text" class="form-control custom-search" multiple="true">
+        <option value="">Please select</option>
+        <option value="1">Valeur 1</option>
+        <option value="2">Valeur 2</option>
+    </select>
+    <button id="custom-search-launch" class="btn btn-default launch">Search</a>
+    <button id="custom-search-launch" class="btn btn-default reset">Reset</a>
+</div>
+
+<div class="col-sm-8">
+
+    <table id="test-table-base"
+            class="table table-condensed table-striped table-bordered table-hover"
+            data-lang-url="{{ asset('js/data-table-french.lang') }}"
+            data-fetch-url="{{ path('table-base-data') }}"
+            {#
+            data-editable-url="{{ path('plan_training_training_updatefield', {'id': '__training-id__'}) }}"                                    
+            data-upload_folder="{{folder}}"
+            data-splitprocess_init="{{ path('splitprocess_init', {'alias' : '__alias__', 'folder': '__folder__' }) }}"
+            data-splitprocess_init_no_folder="{{ path('splitprocess_init', {'alias' : '__alias__' }) }}"
+            data-splitprocess_step="{{ path('splitprocess_step', {'id': '__id__'}) }}"                                    
+            data-training_dowload="{{ path('table_download', {'id': '__id__'}) }}"
+            data-upload_path="{{ path('plan_training_upload_upload', { 'folder': '__folder__' }) }}"
+            data-load_report="{{ path('plan_training_upload_dataLoadReport', {'id': '__id__'}) }}"
+            data-add_training="{{ path('add_training') }}"
+            data-delete_training_filtered ="{{path('delete_training_filtered')}}"
+            data-delete_training_ids="{{path('delete_training_ids')}}"
+            #}
+    >
+        <thead>
+            <tr class="txt-color-white">
+                <th class="bg-color-redLight">ID</th>
+                <th class="bg-color-redLight">Column 1</th>
+                <th class="bg-color-redLight">Column 2</th>
+                <th class="bg-color-redLight">Column 3</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
         
 <script>
     
     var fetchUrl = $('#test-table-base').data('fetch-url');
     var langUrl = $('#test-table-base').data('lang-url');
     
-    var $table = $('#test-table-base').dataTable({
-        "sServerMethod": "POST",
-        "serverSide": true,
-        "processing": true,
-        "language": { "url": langUrl },
-        "dom": '<"top"i>t<"clear"><"col-lg-8 col-lg-offset-4"<"#pagination"p>>',
-        "aoColumnDefs": [
-            {"aTargets": [0], "data": "id", "sName": "id", "sClass": ""},
-            {"aTargets": [1], "data": "colA", "sName": "colA", "sClass": ""},
-            {"aTargets": [2], "data": "colB", "sName": "colB", "sClass": ""},
-            {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""}
-        ],
-        "ajax": {
-            "url": fetchUrl,
-            "type": "POST",
-            "data": function ( d ) {
-                //d.fastSearch = "myValue";
-            }
-        }
+    var $table = $('#test-table-base').smarttable({
+        'options': {
+            "dropdownPageLength": '.table-page-nb',
+            "fastSearchInput": '#fast-search',
+            "fastSearchGo": '#fast-search-launch.launch',
+            "fastSearchReset": '#fast-search-launch.reset',
+            "customSearchInputs": ".custom-search",
+            "customSearchGo": '#custom-search-launch.launch',
+            "customSearchReset": '#custom-search-launch.reset'
+        },
+        'dataTableOptions': {
+            "ajax": fetchUrl,
+            "language": { "url": langUrl },
+            "dom": '<"top"i>t<"clear"><"#pagination"p>',
+            "aoColumnDefs": [
+                {"aTargets": [0], "data": "id", "sName": "id", "sClass": ""},
+                {"aTargets": [1], "data": "colA", "sName": "colA", "sClass": ""},
+                {"aTargets": [2], "data": "colB", "sName": "colB", "sClass": ""},
+                {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""}
+            ]
+        },
     });
     
-    $('#test-table-base').on('preXhr.dt', function(){
-        $(this).loadingOverlay('init', {
-            loaderType      : 'i',
-            loaderClass     : 'fa fa-cog fa-spin fa-3x ajax-overlay-loader'
-        });
-    });
     
-    $('#test-table-base').on('xhr.dt', function(){
-        $(this).loadingOverlay('remove');
-    } );
-    
+
+    // Manager external page-nulber change
+    //var $dataTable = $('#test-table-base').smarttable('getDataTable');
+
+
+
 </script>
         
 {% endblock body %}

@@ -4,12 +4,13 @@ namespace SDLab\Bundle\SmartTableBundle\Test\Entity\Repository;
 
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\Tools\Pagination\Paginator;
+use SDLab\Bundle\SmartTableBundle\TableManager\BaseTableManager;
 
 
 class BaseRepository extends EntityRepository
 {
     
-    public function findForTable($fastSearch='', $seach=array(), $sort=array(), $offset=0, $limit=0)
+    public function findForTable($searchType=BaseTableManager::NO_SEARCH, $fastSearch='', $search=array(), $sort=array(), $offset=0, $limit=0)
     {
         $qb = $this->createQueryBuilder('t')
                 ->setFirstResult($offset)
@@ -21,32 +22,34 @@ class BaseRepository extends EntityRepository
         }
         
         // perform fast search OR custum search
-        if('' != $fastSearch) {
-            $qb ->where('t.code LIKE :search')
-                ->orWhere('t.name LIKE :search')
-                ->orWhere('t.duration LIKE :search')
-                ->orWhere('t.field LIKE :search')
-                ->orWhere('t.subField LIKE :search')
+        if($searchType == BaseTableManager::FAST_SEARCH) {
+            $qb ->where('t.id LIKE :search')
+                ->orWhere('t.colA LIKE :search')
+                ->orWhere('t.colB LIKE :search')
+                ->orWhere('t.colC LIKE :search')
                 ->setParameter('search', '%'.$fastSearch.'%')
             ;
-        } else {
+        } elseif($searchType == BaseTableManager::CUSTOM_SEARCH) {
             
-            foreach($seach as $column => $value) {
+            foreach($search as $key => $value) {
                 
                 if('' != $value) {
                     
+                    /*
                     if(is_array($value)) {
                         
-                        $qb ->andWhere($qb->expr()->in('t.'.$column, ':param_'.$column))
-                            ->setParameter('param_'.$column, $value)
+                        $qb ->andWhere($qb->expr()->in('t.'.$key, ':param_'.$key))
+                            ->setParameter('param_'.$key, $value)
                         ;
                         
                     } else {
                     
-                        $qb ->andWhere('t.'.$column.' LIKE :param_'.$column)
-                            ->setParameter('param_'.$column, $value)
+                        $qb ->andWhere('t.'.$key.' LIKE :param_'.$key)
+                            ->setParameter('param_'.$key, $value)
                         ;
                     }
+                     * 
+                     */
                 }
             }
         }
