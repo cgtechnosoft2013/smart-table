@@ -4,7 +4,7 @@
         "Read more about it at http://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "de5f34d905fb2f5aac05a00391cd0441",
+    "hash": "816d1c8f288d231d19afc389963ad3f1",
     "packages": [
         {
             "name": "doctrine/annotations",
@@ -2287,6 +2287,53 @@
             "time": "2013-08-31 23:46:48"
         },
         {
+            "name": "sdlab/split-process-bundle",
+            "version": "dev-master",
+            "target-dir": "SDLab/Bundle/SplitProcessBundle",
+            "source": {
+                "type": "git",
+                "url": "git@bitbucket.org:sdlab/sdlab-split-process.git",
+                "reference": "e2ffdb01d1a7b87d4f193b4fcf21c168cede7516"
+            },
+            "require": {
+                "doctrine/doctrine-bundle": "~1.2",
+                "doctrine/orm": "~2.2,>=2.2.3",
+                "php": ">=5.3.3",
+                "sensio/distribution-bundle": "~3.0",
+                "sensio/framework-extra-bundle": "~3.0",
+                "symfony/symfony": "2.5.*"
+            },
+            "require-dev": {
+                "behat/behat": "~2.4",
+                "behat/mink-extension": "~1.0",
+                "behat/mink-goutte-driver": "*",
+                "behat/mink-selenium2-driver": "*",
+                "behat/symfony2-extension": "~1.0",
+                "components/bootstrap": "*",
+                "components/jquery": "*",
+                "symfony/monolog-bundle": "~2.1"
+            },
+            "type": "symfony-bundle",
+            "autoload": {
+                "psr-0": {
+                    "Test\\Script\\ScriptHandler": "",
+                    "SDLab\\Bundle\\SplitProcessBundle": ""
+                }
+            },
+            "scripts": {
+                "post-install-cmd": [
+                    "Test\\Script\\ScriptHandler::addComponentsSymlink",
+                    "Test\\Script\\ScriptHandler::addJSSymlink"
+                ],
+                "post-update-cmd": [
+                    "Test\\Script\\ScriptHandler::addComponentsSymlink",
+                    "Test\\Script\\ScriptHandler::addJSSymlink"
+                ]
+            },
+            "description": "SDLab : SplitProcess bundle",
+            "time": "2014-09-18 12:32:02"
+        },
+        {
             "name": "symfony/monolog-bundle",
             "version": "v2.6.1",
             "source": {
@@ -2350,9 +2397,9 @@
 
     ],
     "minimum-stability": "stable",
-    "stability-flags": [
-
-    ],
+    "stability-flags": {
+        "sdlab/split-process-bundle": 20
+    },
     "prefer-stable": false,
     "platform": {
         "php": ">=5.3.3"

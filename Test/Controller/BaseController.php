@@ -22,6 +22,16 @@ class BaseController extends Controller
     }
     
     /**
+     * @Route("/table/test/jarvis", name="table-jarvis")
+     * @Template("SDLabSmartTableBundle:Test:Base/jarvis.html.twig")
+     */
+    public function jarvisAction()
+    {
+        return array();
+    }
+    
+    
+    /**
      * @Route("/table/test/base/data", name="table-base-data")
      */
     public function baseDataAction(Request $request)

@@ -9,8 +9,8 @@
     {# outside fast search #}
     <div class="col-sm-2">
         <input id="fast-search" type="text" class="form-control" placeholder="Fast search" />
-        <button id="fast-search-launch" class="btn btn-default launch">Search</a>
-        <button id="fast-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
+        <button id="fast-search-launch" class="btn btn-default">Search</a>
+        <button id="fast-search-reset" class="btn btn-default" style="display: none;">Reset</a>
     </div>
 
     {# outside Custom filter #}
@@ -27,8 +27,8 @@
             <option value="1">Valeur 1</option>
             <option value="2">Valeur 2</option>
         </select>
-        <button id="custom-search-launch" class="btn btn-default launch">Search</a>
-        <button id="custom-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
+        <button id="custom-search-launch" class="btn btn-default">Search</a>
+        <button id="custom-search-reset" class="btn btn-default" style="display: none;">Reset</a>
     </div>
 
     {# outside Page number selection #}
@@ -47,7 +47,7 @@
     </div>
 
     <div class="col-sm-2">
-        dssdf
+        
     </div>
 </div>
 
@@ -99,12 +99,12 @@
         'options': {
             "dropdownPageLength": '.table-page-nb',
             "fastSearchInput": '#fast-search',
-            "fastSearchGo": '#fast-search-launch.launch',
-            "fastSearchReset": '#fast-search-launch.reset',
+            "fastSearchGo": '#fast-search-launch',
+            "fastSearchReset": '#fast-search-reset',
             "fastSearchGoResetToggle": true,
             "customSearchInputs": ".custom-search",
-            "customSearchGo": '#custom-search-launch.launch',
-            "customSearchReset": '#custom-search-launch.reset',
+            "customSearchGo": '#custom-search-launch',
+            "customSearchReset": '#custom-search-reset',
             "customSearchGoResetToggle": true
         },
         'dataTableOptions': {

@@ -22,7 +22,9 @@
         "symfony/monolog-bundle":       "~2.1",
         "components/jquery":            "*",
         "components/bootstrap":         "*",
-        "components/font-awesome":      "*"
+        "components/font-awesome":      "*",
+        
+        "sdlab/split-process-bundle": "*@dev"
     },
     "config": {
         "component-dir": "vendor",
@@ -46,5 +48,8 @@
             "Test\\Script\\ScriptHandler::addJSSymlink",
             "Test\\Script\\ScriptHandler::addCssSymlink"
         ]
-    }
+    },
+    "repositories": [
+        { "type": "git", "url":  "git@bitbucket.org:sdlab/sdlab-split-process.git" }
+    ]
 }

@@ -1,0 +1,166 @@
+{% extends 'SDLabSmartTableBundle::base.html.twig' %}
+
+{% block body %}
+    
+<script type="text/JavaScript" src="{{ asset('js/jquery-ui-1.10.3.min.js') }}"></script>
+<link rel="stylesheet" type="text/css" href="{{ asset('css/smartadmin-production.min.css') }}" />
+    
+    
+<h2>Jarvis widget</h2>
+
+
+<section id="widget-grid">
+    <div class="row">
+        <article class="col-xs-12 col-sm-12 col-md-12 col-lg-12">
+            <div id="training-list"
+                 class="jarviswidget jarviswidget-color-blueDark"  
+                 data-widget-editbutton="false"
+                 data-widget-deletebutton="false"
+                 data-widget-colorbutton="false"
+                 data-widget-sortable="false" 
+            >
+                <header>
+                    <span class="widget-icon"> <i class="fa fa-table"></i> </span>
+                    <h2>Table de test </h2>
+                    
+                    <div class="widget-toolbar smart-form" role="menu">
+                        <label class="input">
+                            <i id="fast-search-launch" class="icon-append fa fa-search"></i>
+                            <i id="fast-search-reset" class="icon-append fa fa-times" style="display: none;"></i>
+                            <input id="fast-search" type="text" placeholder="Recherche rapide">
+                            <b class="tooltip tooltip-top-right">
+                                <i class="fa fa-warning txt-color-teal"></i> 
+                                Pour une recherche avancée, cliquez sur "Filtres"
+                            </b> 
+                        </label>
+                    </div>
+                    <div class="widget-toolbar smart-form hidden-md hidden-sm hidden-xs table-page-nb" role="menu">
+                        <div class="btn-group">
+                            <button class="btn dropdown-toggle btn-sm btn-default" data-toggle="dropdown">
+                                Par page <i class="fa fa-caret-down"></i>
+                            </button>
+                            <ul class="dropdown-menu pull-right">
+                                <li class="active"><a data-page-length="10" href="javascript:void(0);">10</a></li>
+                                <li><a data-page-length="15" href="javascript:void(0);">15</a></li>
+                                <li><a data-page-length="20" href="javascript:void(0);">20</a></li>
+                                <li><a data-page-length="50" href="javascript:void(0);">50</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                    <div class="widget-toolbar" role="menu">
+                        <div class="btn-group">
+                            <button id="filter_training" type="button" class="btn btn-default btn-sm">
+                                <i class="fa fa-filter"></i>
+                                <span class="hidden-md hidden-sm hidden-xs">Filtres</span>
+                            </button>
+                            <button id="file_download" type="button" class="btn btn-default btn-sm">
+                                <i class="fa fa-table"></i>
+                                <span class="hidden-md hidden-sm hidden-xs">Reportings</span>
+                            </button>
+                        </div>   
+                    </div>
+
+                    
+                </header>
+                <div>
+                    
+                    <div class="jarviswidget-editbox">
+                    </div>
+                    
+                    <div class="widget-body no-padding">
+                        
+                        <div id="filter-zone" class="table-zone" style="display: none;">
+                            {# outside Custom filter #}
+                            <div class="col-sm-2">
+                                <input id="custom-search-1" data-custom-search-name="key1" type="text" class="form-control custom-search" placeholder="Custom Search1" />
+                                <input id="custom-search-2" data-custom-search-name="key2" type="text" class="form-control custom-search" placeholder="Custom Search2" />
+                                <select id="custom-search-3" data-custom-search-name="key3" type="text" class="form-control custom-search">
+                                    <option value="">Please select</option>
+                                    <option value="1">Valeur 1</option>
+                                    <option value="2">Valeur 2</option>
+                                </select>
+                                <select id="custom-search-4" data-custom-search-name="key4" type="text" class="form-control custom-search" multiple="true">
+                                    <option value="">Please select</option>
+                                    <option value="1">Valeur 1</option>
+                                    <option value="2">Valeur 2</option>
+                                </select>
+                                <button id="custom-search-launch" class="btn btn-default">Search</a>
+                                <button id="custom-search-reset" class="btn btn-default" style="display: none;">Reset</a>
+                            </div>
+                        </div>
+
+                        <table id="test-table-base"
+                                class="table table-condensed table-striped table-bordered table-hover"
+                                data-lang-url="{{ asset('js/data-table-french.lang') }}"
+                                data-fetch-url="{{ path('table-base-data') }}"
+                        >
+                            <thead>
+                                <tr class="txt-color-white">
+                                    <th class="bg-color-redLight">ID</th>
+                                    <th class="bg-color-redLight">Column 1</th>
+                                    <th class="bg-color-redLight">Column 2</th>
+                                    <th class="bg-color-redLight">Column 3</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
+                                </tr>
+                            </tbody>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </article>
+    </div>
+</section>
+
+        
+<script>
+    
+    var fetchUrl = $('#test-table-base').data('fetch-url');
+    var langUrl = $('#test-table-base').data('lang-url');
+    
+    var $table = $('#test-table-base').smarttable({
+        'options': {
+            "dropdownPageLength": '.table-page-nb',
+            "fastSearchInput": '#fast-search',
+            "fastSearchGo": '#fast-search-launch',
+            "fastSearchReset": '#fast-search-reset',
+            "fastSearchGoResetToggle": true,
+            "customSearchInputs": ".custom-search",
+            "customSearchGo": '#custom-search-launch',
+            "customSearchReset": '#custom-search-reset',
+            "customSearchGoResetToggle": true,
+            
+            "filterButton": '#filter_training',
+            "filterZone": '#filter-zone',
+            "reportingButton": null,
+            "reportingZone": null,
+            "zones": '.table-zone',
+            "selectedZoneButtonClass": 'bg-color-redLight'
+        },
+        'dataTableOptions': {
+            "ajax": fetchUrl,
+            "language": { "url": langUrl },
+            "dom": '<"top"i>t<"clear"><"#pagination"p>',
+            "aoColumnDefs": [
+                {"aTargets": [0], "data": "id", "sName": "id", "sClass": ""},
+                {"aTargets": [1], "data": "colA", "sName": "colA", "sClass": ""},
+                {"aTargets": [2], "data": "colB", "sName": "colB", "sClass": ""},
+                {"aTargets": [3], "data": "colC", "sName": "colC", "sClass": ""}
+            ]
+        }
+    });
+    
+    
+
+    // Manager external page-nulber change
+    //var $dataTable = $('#test-table-base').smarttable('getDataTable');
+
+
+
+</script>
+        
+{% endblock body %}

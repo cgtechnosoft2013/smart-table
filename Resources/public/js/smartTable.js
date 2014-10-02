@@ -39,11 +39,12 @@
             "customSearchGoResetToggle": false,
             
             // specific jarviswidget table part
-            "btnGroup": null,
             "filterButton": null,
             "filterZone": null,
             "reportingButton": null,
             "reportingZone": null,
+            "zones": null, // needed to hide other zones when one is displayed
+            "selectedZoneButtonClass": null,
         },
         'dataTableOptions': {
             "sServerMethod": "POST",
@@ -141,6 +142,27 @@
     };
     
     
+    SmartTable.DEFAULTS.options.fnInitZoneDisplay = function() {
+
+        var self = this;
+
+        $(this.options.filterButton).click(function(){
+            
+            if( $(self.options.filterZone).is(':visible') ){
+                
+                $(this).removeClass(self.options.selectedZoneButtonClass);
+                $(self.options.filterZone).hide('blind', { direction: 'up'});
+                
+            } else {
+                
+                $(this).addClass(self.options.selectedZoneButtonClass);
+                $(self.options.zones).hide();
+                $(self.options.filterZone).show('blind', { direction: 'up'});
+            }
+            
+        });
+
+    };
     
     
     
@@ -169,6 +191,8 @@
         this.initDropdownPageLength();
         $.proxy(this.options.fnInitFastSearch, this)();
         $.proxy(this.options.fnInitCustomSearch, this)();
+        $.proxy(this.options.fnInitZoneDisplay, this)();
+        
     };
     
     
