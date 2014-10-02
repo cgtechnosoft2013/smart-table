@@ -35,7 +35,7 @@ class BaseRepository extends EntityRepository
                 
                 if('' != $value) {
                     
-                    /*
+                   
                     if(is_array($value)) {
                         
                         $qb ->andWhere($qb->expr()->in('t.'.$key, ':param_'.$key))
@@ -45,11 +45,10 @@ class BaseRepository extends EntityRepository
                     } else {
                     
                         $qb ->andWhere('t.'.$key.' LIKE :param_'.$key)
-                            ->setParameter('param_'.$key, $value)
+                            ->setParameter('param_'.$key, '%'.$value.'%')
                         ;
                     }
-                     * 
-                     */
+                    
                 }
             }
         }

@@ -2293,7 +2293,7 @@
             "source": {
                 "type": "git",
                 "url": "git@bitbucket.org:sdlab/sdlab-split-process.git",
-                "reference": "e2ffdb01d1a7b87d4f193b4fcf21c168cede7516"
+                "reference": "0f9f4996e2b78a85823eb7d3df28862855e0d078"
             },
             "require": {
                 "doctrine/doctrine-bundle": "~1.2",
@@ -2331,7 +2331,7 @@
                 ]
             },
             "description": "SDLab : SplitProcess bundle",
-            "time": "2014-09-18 12:32:02"
+            "time": "2014-10-02 12:15:30"
         },
         {
             "name": "symfony/monolog-bundle",
