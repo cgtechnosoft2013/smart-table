@@ -22,7 +22,7 @@
 <div class="col-sm-2">
     <input id="fast-search" type="text" class="form-control" placeholder="Fast search" />
     <button id="fast-search-launch" class="btn btn-default launch">Search</a>
-    <button id="fast-search-launch" class="btn btn-default reset">Reset</a>
+    <button id="fast-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
 </div>
 
 <div class="col-sm-2">
@@ -39,7 +39,7 @@
         <option value="2">Valeur 2</option>
     </select>
     <button id="custom-search-launch" class="btn btn-default launch">Search</a>
-    <button id="custom-search-launch" class="btn btn-default reset">Reset</a>
+    <button id="custom-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
 </div>
 
 <div class="col-sm-8">
@@ -90,9 +90,11 @@
             "fastSearchInput": '#fast-search',
             "fastSearchGo": '#fast-search-launch.launch',
             "fastSearchReset": '#fast-search-launch.reset',
+            "fastSearchGoResetToggle": true,
             "customSearchInputs": ".custom-search",
             "customSearchGo": '#custom-search-launch.launch',
-            "customSearchReset": '#custom-search-launch.reset'
+            "customSearchReset": '#custom-search-launch.reset',
+            "customSearchGoResetToggle": true
         },
         'dataTableOptions': {
             "ajax": fetchUrl,

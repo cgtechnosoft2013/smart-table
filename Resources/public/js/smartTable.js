@@ -31,10 +31,12 @@
             "fastSearchInput": null,
             "fastSearchGo": null,
             "fastSearchReset": null,
+            "fastSearchGoResetToggle": false,
             
             "customSearchInputs": null,
             "customSearchGo": null,
             "customSearchReset": null,
+            "customSearchGoResetToggle": false,
         },
         'dataTableOptions': {
             "sServerMethod": "POST",
@@ -229,17 +231,40 @@
     
     SmartTable.prototype.launchFastSearch = function() {
         this.filterType = FILTER_TYPE_FAST;
+        
+        if(this.options.fastSearchGoResetToggle == true) {
+            $(this.options.fastSearchGo).hide();
+            $(this.options.fastSearchReset).show(); 
+        }
+        
         this.$dataTable.api().draw();
     };
     
     SmartTable.prototype.launchCustomSearch = function() {
         this.filterType = FILTER_TYPE_CUSTOM;
+        
+        if(this.options.customSearchGoResetToggle == true) {
+            $(this.options.customSearchGo).hide();
+            $(this.options.customSearchReset).show();
+        }
+        
         this.$dataTable.api().draw();
     };
     
     SmartTable.prototype.resetSearch = function() {
         this.filterType = FILTER_TYPE_NONE;
+        
+        if(this.options.fastSearchGoResetToggle == true) {
+            $(this.options.fastSearchReset).hide();
+            $(this.options.fastSearchGo).show();
+        }
+        if(this.options.customSearchGoResetToggle == true) {
+            $(this.options.customSearchReset).hide();
+            $(this.options.customSearchGo).show();
+        }
+        
         $(this.options.fastSearchInput).val('');
+        $(this.options.customSearchInputs).val('');
         this.$dataTable.api().draw();
     };
     
