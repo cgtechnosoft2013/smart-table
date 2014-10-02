@@ -37,6 +37,13 @@
             "customSearchGo": null,
             "customSearchReset": null,
             "customSearchGoResetToggle": false,
+            
+            // specific jarviswidget table part
+            "btnGroup": null,
+            "filterButton": null,
+            "filterZone": null,
+            "reportingButton": null,
+            "reportingZone": null,
         },
         'dataTableOptions': {
             "sServerMethod": "POST",

@@ -3,80 +3,91 @@
 {% block body %}
 
 <h2>Basic</h2>
+
+<div class="row">
     
-{# outside Page number selection #}
-<div class="table-page-nb col-sm-2 col-sm-offset-2">
-    <div class="btn-group">
-        <button class="btn dropdown-toggle btn-default" data-toggle="dropdown">
-            Per page <i class="fa fa-caret-down"></i>
-        </button>
-        <ul class="dropdown-menu pull-right">
-            <li class="active"><a data-page-length="10" href="javascript:void(0);">10</a></li>
-            <li><a data-page-length="15" href="javascript:void(0);">15</a></li>
-            <li><a data-page-length="20" href="javascript:void(0);">20</a></li>
-            <li><a data-page-length="50" href="javascript:void(0);">50</a></li>
-        </ul>
+    {# outside fast search #}
+    <div class="col-sm-2">
+        <input id="fast-search" type="text" class="form-control" placeholder="Fast search" />
+        <button id="fast-search-launch" class="btn btn-default launch">Search</a>
+        <button id="fast-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
+    </div>
+
+    {# outside Custom filter #}
+    <div class="col-sm-2">
+        <input id="custom-search-1" data-custom-search-name="key1" type="text" class="form-control custom-search" placeholder="Custom Search1" />
+        <input id="custom-search-2" data-custom-search-name="key2" type="text" class="form-control custom-search" placeholder="Custom Search2" />
+        <select id="custom-search-3" data-custom-search-name="key3" type="text" class="form-control custom-search">
+            <option value="">Please select</option>
+            <option value="1">Valeur 1</option>
+            <option value="2">Valeur 2</option>
+        </select>
+        <select id="custom-search-4" data-custom-search-name="key4" type="text" class="form-control custom-search" multiple="true">
+            <option value="">Please select</option>
+            <option value="1">Valeur 1</option>
+            <option value="2">Valeur 2</option>
+        </select>
+        <button id="custom-search-launch" class="btn btn-default launch">Search</a>
+        <button id="custom-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
+    </div>
+
+    {# outside Page number selection #}
+    <div class="table-page-nb col-sm-2">
+        <div class="btn-group">
+            <button class="btn dropdown-toggle btn-default" data-toggle="dropdown">
+                Per page <i class="fa fa-caret-down"></i>
+            </button>
+            <ul class="dropdown-menu pull-right">
+                <li class="active"><a data-page-length="10" href="javascript:void(0);">10</a></li>
+                <li><a data-page-length="15" href="javascript:void(0);">15</a></li>
+                <li><a data-page-length="20" href="javascript:void(0);">20</a></li>
+                <li><a data-page-length="50" href="javascript:void(0);">50</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="col-sm-2">
+        dssdf
     </div>
 </div>
 
-<div class="col-sm-2">
-    <input id="fast-search" type="text" class="form-control" placeholder="Fast search" />
-    <button id="fast-search-launch" class="btn btn-default launch">Search</a>
-    <button id="fast-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
-</div>
+<div class="row">
+    <div class="col-sm-8">
 
-<div class="col-sm-2">
-    <input id="custom-search-1" data-custom-search-name="key1" type="text" class="form-control custom-search" placeholder="Custom Search1" />
-    <input id="custom-search-2" data-custom-search-name="key2" type="text" class="form-control custom-search" placeholder="Custom Search2" />
-    <select id="custom-search-3" data-custom-search-name="key3" type="text" class="form-control custom-search">
-        <option value="">Please select</option>
-        <option value="1">Valeur 1</option>
-        <option value="2">Valeur 2</option>
-    </select>
-    <select id="custom-search-4" data-custom-search-name="key4" type="text" class="form-control custom-search" multiple="true">
-        <option value="">Please select</option>
-        <option value="1">Valeur 1</option>
-        <option value="2">Valeur 2</option>
-    </select>
-    <button id="custom-search-launch" class="btn btn-default launch">Search</a>
-    <button id="custom-search-launch" class="btn btn-default reset" style="display: none;">Reset</a>
-</div>
+        <table id="test-table-base"
+                class="table table-condensed table-striped table-bordered table-hover"
+                data-lang-url="{{ asset('js/data-table-french.lang') }}"
+                data-fetch-url="{{ path('table-base-data') }}"
+                {#
+                data-editable-url="{{ path('plan_training_training_updatefield', {'id': '__training-id__'}) }}"                                    
+                data-upload_folder="{{folder}}"
+                data-splitprocess_init="{{ path('splitprocess_init', {'alias' : '__alias__', 'folder': '__folder__' }) }}"
+                data-splitprocess_init_no_folder="{{ path('splitprocess_init', {'alias' : '__alias__' }) }}"
+                data-splitprocess_step="{{ path('splitprocess_step', {'id': '__id__'}) }}"                                    
+                data-training_dowload="{{ path('table_download', {'id': '__id__'}) }}"
+                data-upload_path="{{ path('plan_training_upload_upload', { 'folder': '__folder__' }) }}"
+                data-load_report="{{ path('plan_training_upload_dataLoadReport', {'id': '__id__'}) }}"
+                data-add_training="{{ path('add_training') }}"
+                data-delete_training_filtered ="{{path('delete_training_filtered')}}"
+                data-delete_training_ids="{{path('delete_training_ids')}}"
+                #}
+        >
+            <thead>
+                <tr class="txt-color-white">
+                    <th class="bg-color-redLight">ID</th>
+                    <th class="bg-color-redLight">Column 1</th>
+                    <th class="bg-color-redLight">Column 2</th>
+                    <th class="bg-color-redLight">Column 3</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
+                </tr>
+            </tbody>
+        </table>
 
-<div class="col-sm-8">
-
-    <table id="test-table-base"
-            class="table table-condensed table-striped table-bordered table-hover"
-            data-lang-url="{{ asset('js/data-table-french.lang') }}"
-            data-fetch-url="{{ path('table-base-data') }}"
-            {#
-            data-editable-url="{{ path('plan_training_training_updatefield', {'id': '__training-id__'}) }}"                                    
-            data-upload_folder="{{folder}}"
-            data-splitprocess_init="{{ path('splitprocess_init', {'alias' : '__alias__', 'folder': '__folder__' }) }}"
-            data-splitprocess_init_no_folder="{{ path('splitprocess_init', {'alias' : '__alias__' }) }}"
-            data-splitprocess_step="{{ path('splitprocess_step', {'id': '__id__'}) }}"                                    
-            data-training_dowload="{{ path('table_download', {'id': '__id__'}) }}"
-            data-upload_path="{{ path('plan_training_upload_upload', { 'folder': '__folder__' }) }}"
-            data-load_report="{{ path('plan_training_upload_dataLoadReport', {'id': '__id__'}) }}"
-            data-add_training="{{ path('add_training') }}"
-            data-delete_training_filtered ="{{path('delete_training_filtered')}}"
-            data-delete_training_ids="{{path('delete_training_ids')}}"
-            #}
-    >
-        <thead>
-            <tr class="txt-color-white">
-                <th class="bg-color-redLight">ID</th>
-                <th class="bg-color-redLight">Column 1</th>
-                <th class="bg-color-redLight">Column 2</th>
-                <th class="bg-color-redLight">Column 3</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td colspan="5" class="dataTables_empty">Chargement en cours ...</td>
-            </tr>
-        </tbody>
-    </table>
-
+    </div>
 </div>
         
 <script>
