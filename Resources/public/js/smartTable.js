@@ -136,7 +136,7 @@
         });
         
         $(this.options.customSearchReset).click(function(){
-            self.options.fnResetSearch();
+            $.proxy(self.options.fnResetSearch, self)();
         });
 
     };
@@ -302,7 +302,7 @@
                 var name = $(this).data('custom-search-name');
                 
                 if(value instanceof Array) {
-                    value = value.join(PARAM_LIST_SEPARATOR);
+                    value = JSON.stringify(value)||[];
                 }
                 
                 data['customSearch-' + name] = value;
