@@ -298,7 +298,12 @@
 
             $(this.options.customSearchInputs).each(function(){
                 
-                var value = $(this).val();
+                var value;
+                if ($(this).attr('type') === 'checkbox'){
+                    value = $(this).prop('checked');
+                }else{
+                    value = $(this).val();
+                }
                 var name = $(this).data('custom-search-name');
                 
                 if(value instanceof Array) {
