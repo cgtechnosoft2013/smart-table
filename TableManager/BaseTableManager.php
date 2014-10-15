@@ -111,9 +111,9 @@ abstract class BaseTableManager
         
         foreach($this->request->request->all() as $key => $value) {
             
-            if(substr($key, 0, 13) == 'customSearch-' && null != $value && '' != $value) {
+            if(substr($key, 0, 13) == 'customSearch-' && null != $value && '' != $value && '[""]' != $value) {
                 
-                $this->customSearch[$key] = $this->getParamValue($value);
+                $this->customSearch[substr($key, 13)] = $this->getParamValue($value);
                 $this->searchType = self::CUSTOM_SEARCH;
             }
         }
@@ -127,8 +127,8 @@ abstract class BaseTableManager
      */
     protected function getParamValue($value)
     {
-        if (strpos($value, self::PARAM_LIST_SEPARATOR) !== false) {
-            return explode(self::PARAM_LIST_SEPARATOR, $value);
+        if (null !== json_decode($value) && $value !== '') {
+            return json_decode($value);
         }
         
         return $value;

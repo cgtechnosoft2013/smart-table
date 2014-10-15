@@ -136,7 +136,7 @@
         });
         
         $(this.options.customSearchReset).click(function(){
-            self.options.fnResetSearch();
+            $.proxy(self.options.fnResetSearch, self)();
         });
 
     };
@@ -298,11 +298,16 @@
 
             $(this.options.customSearchInputs).each(function(){
                 
-                var value = $(this).val();
+                var value;
+                if ($(this).attr('type') === 'checkbox'){
+                    value = $(this).prop('checked');
+                }else{
+                    value = $(this).val();
+                }
                 var name = $(this).data('custom-search-name');
                 
                 if(value instanceof Array) {
-                    value = value.join(PARAM_LIST_SEPARATOR);
+                    value = JSON.stringify(value)||[];
                 }
                 
                 data['customSearch-' + name] = value;
