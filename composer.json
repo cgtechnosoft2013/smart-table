@@ -5,11 +5,11 @@
     "target-dir": "SDLab/Bundle/SmartTableBundle",
     "require": {
         "php":                           ">=5.3.3",
-        "symfony/symfony":               "2.5.*",
-        "sensio/distribution-bundle":    "~3.0",
-        "sensio/framework-extra-bundle": "~3.0",
+        "symfony/symfony":               ">=2.3.0",
+        "sensio/distribution-bundle":    "*",
+        "sensio/framework-extra-bundle": "*",
         "doctrine/orm":                  "~2.2,>=2.2.3",
-        "doctrine/doctrine-bundle":      "~1.2"
+        "doctrine/doctrine-bundle":      "*"
     },
     "require-dev": {
         "behat/behat":                  "~2.4",
