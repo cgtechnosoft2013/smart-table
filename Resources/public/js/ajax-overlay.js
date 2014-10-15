@@ -11,10 +11,10 @@ function AjaxLoader (el, options) {
     var defaults = {
         bgColor         : 'rgba(255, 255, 255, 0.5)',
         overlayClass 	: 'ajax-overlay',
-        loaderType      : 'div',
-        loaderClass     : 'ajax-overlay-loader'
+        loaderType      : 'i',
+        loaderClass     : 'fa fa-cog fa-spin fa-3x ajax-overlay-loader'
     };
-    this.options 	= jQuery.extend(defaults, options);
+    this.options 	= $.extend(defaults, options);
     this.container 	= $(el);
 
     this.init = function() {
@@ -57,15 +57,16 @@ function AjaxLoader (el, options) {
 // add to jquery (Smart Data Lab 01/10/2014)
 (function ($) {
 
-  $.fn.loadingOverlay = function (method, options) {
-      if(method === 'init') {
-          var loader = new AjaxLoader(this, options);
-          loader.init();
-      }
-      if(method === 'remove') {
-          var loader = new AjaxLoader(this, options);
-          loader.remove();
-      }
+    $.fn.loadingOverlay = function (method, options) {
+        
+        if(method === 'init') {
+            var loader = new AjaxLoader(this, options);
+            loader.init();
+        }
+        if(method === 'remove') {
+            var loader = new AjaxLoader(this, options);
+            loader.remove();
+        }
   };
 
 }(jQuery));
