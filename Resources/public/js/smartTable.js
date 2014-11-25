@@ -93,7 +93,21 @@
         }
         
         $(this.options.fastSearchInput).val('');
-        $(this.options.customSearchInputs).val('');
+        $.each($(this.options.customSearchInputs), function(index, element){
+            if($(element).is('select')){
+                if($(element).attr('multiple') != 'multiple'){
+                    $(element).val($(element).find('option:first').val()).change();
+                }else{
+                    $(element).val('').change();
+                }
+            }
+            if($(element).is('input:checkbox')){
+                $(element).prop('checked',false);
+            }
+            if($(element).is('input:text')){
+                $(element).val('');
+            }
+        });
         this.$dataTable.api().draw();
     };
     
