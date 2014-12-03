@@ -9,7 +9,6 @@
     var FILTER_TYPE_NONE = 0;
     var FILTER_TYPE_FAST = 1;
     var FILTER_TYPE_CUSTOM = 2;
-    var PARAM_LIST_SEPARATOR = ']__[';
 
     // SMARTTABLE PUBLIC CLASS DEFINITION
     // ==================================
@@ -198,14 +197,18 @@
         this.options = allOptions.options;
         this.dataTableOptions = allOptions.dataTableOptions;
         
+        $.proxy(this.options.fnInitFastSearch, this)();
+        $.proxy(this.options.fnInitCustomSearch, this)();
+        $.proxy(this.options.fnInitZoneDisplay, this)();
+    };
+    
+    SmartTable.prototype.initQuery = function(table, options) {
+        
         this.manageAjaxCall();
         this.$dataTable = this.$table.dataTable(this.dataTableOptions);   
                 
         this.initSpinner();
         this.initDropdownPageLength();
-        $.proxy(this.options.fnInitFastSearch, this)();
-        $.proxy(this.options.fnInitCustomSearch, this)();
-        $.proxy(this.options.fnInitZoneDisplay, this)();
         
     };
     
@@ -221,6 +224,15 @@
         
         var baseOptions = $.extend({}, this.getDefaults().options, options.options);
         var dataTableOptions = $.extend({}, this.getDefaults().dataTableOptions, options.dataTableOptions);
+
+        // manager state saving callbacks
+        if(typeof dataTableOptions.stateSaveCallback === 'undefined') {
+            dataTableOptions.stateSaveCallback = this.defaultStateSaveCallback;
+        }
+        if(typeof dataTableOptions.stateLoadCallback === 'undefined') {
+            dataTableOptions.stateLoadCallback = this.defaultStateLoadCallback;
+        }
+
         return {
             options: baseOptions,
             dataTableOptions: dataTableOptions
@@ -301,6 +313,8 @@
      */
     SmartTable.prototype.addAjaxFilterData = function(data) {
         
+        var self = this;
+        
         if(FILTER_TYPE_NONE === this.filterType) {
         }
 
@@ -311,19 +325,8 @@
         if(FILTER_TYPE_CUSTOM === this.filterType) {
 
             $(this.options.customSearchInputs).each(function(){
-                
-                var value;
-                if ($(this).attr('type') === 'checkbox'){
-                    value = $(this).prop('checked');
-                }else{
-                    value = $(this).val();
-                }
+                var value = self.getFieldValue(this);
                 var name = $(this).data('custom-search-name');
-                
-                if(value instanceof Array) {
-                    value = JSON.stringify(value)||[];
-                }
-                
                 data['customSearch-' + name] = value;
             });
         }
@@ -332,12 +335,106 @@
     };
     
     
+    /**
+     * Get value from different form elements
+     */
+    SmartTable.prototype.getFieldValue = function(element) {
 
+        var value;
+        if ($(element).attr('type') === 'checkbox'){
+            value = $(element).prop('checked');
+        }else{
+            value = $(element).val();
+        }
+        if(value instanceof Array) {
+            value = JSON.stringify(value)||[];
+        }
+        return value;
+    };
     
+    /**
+     * Set value from different form elements
+     */
+    SmartTable.prototype.setFieldValue = function(element, value) {
 
+        if ($(element).attr('type') === 'checkbox'){
+            $(element).prop('checked', value);
+        } else if ($(element).is('select') && $(element).attr('multiple')) {
+             var arrayValue = JSON.parse(value)||[];
+             (element).val(arrayValue);
+        } else {
+            $(element).val(value);
+        }
+    };
     
     
-    
+    /**
+     * Default StateSaveCallback
+     * Allow to save fastSearch / customSeach / page / sort ...
+     * Use DataTable stateSave functionality
+     * 
+     * option stateSave in dataTableOptions as to be set to true
+     * 
+     * Can be overwritten directly in dataTableOptions
+     */
+    SmartTable.prototype.defaultStateSaveCallback = function(oSettings, oData) {
+        
+        var smartTable = $(this).data('bs.smarttable');
+        
+        var customSearch = {};
+        $(smartTable.options.customSearchInputs).each(function(){
+            if(typeof $(this).data('custom-search-name') !== 'undefined') {
+                var value = SmartTable.prototype.getFieldValue(this);
+                var name = $(this).data('custom-search-name');
+                customSearch[name] = value;
+            }
+        });
+        
+        var storedData = {
+            'filterType': smartTable.filterType,
+            'fastSearch': $(smartTable.options.fastSearchInput).val(),
+            'customSearch': customSearch
+        };
+        localStorage.setItem('smart_table_' + window.location.pathname, JSON.stringify(storedData));
+    };
+            
+    /**
+     * Default StateLoadCallback
+     * Allow to save fastSearch / customSeach / page / sort ...
+     * Use DataTable stateSave functionality
+     * 
+     * option stateSave in dataTableOptions as to be set to true
+     * 
+     * Can be overwritten directly in dataTableOptions
+     */
+    SmartTable.prototype.defaultStateLoadCallback = function(oSettings) {
+        
+        var storedData = JSON.parse(localStorage.getItem('smart_table_' + window.location.pathname));
+        var smartTable = $(this).data('bs.smarttable');
+
+        if (storedData === null) return;
+        if (typeof storedData.filterType === 'undefined') return;
+
+        if(storedData.filterType === FILTER_TYPE_FAST) {
+            smartTable.filterType = FILTER_TYPE_FAST;
+            $(smartTable.options.fastSearchInput).val(storedData.fastSearch);
+            if(smartTable.options.fastSearchGoResetToggle == true) {
+                $(smartTable.options.fastSearchReset).show();
+                $(smartTable.options.fastSearchGo).hide();
+            }
+        }
+        
+        if(storedData.filterType === FILTER_TYPE_CUSTOM) {
+            smartTable.filterType = FILTER_TYPE_CUSTOM;
+            for(var name in storedData.customSearch) {
+                SmartTable.prototype.setFieldValue($('*[data-custom-search-name="' + name + '"]'), storedData.customSearch[name]);
+            }
+        }
+
+    };
+
+
+
     // SMARTTABLE PLUGIN DEFINITION
     // ============================
 
@@ -359,6 +456,7 @@
             if (!data) {
                 // save object with option
                 $this.data('bs.smarttable', (data = new SmartTable(this, options)));
+                data.initQuery(); // second init step (split to allow managing dataTable stateLoadCallback)
             }
             
         });
