@@ -377,7 +377,7 @@
      * 
      * Can be overwritten directly in dataTableOptions
      */
-    SmartTable.prototype.defaultStateSaveCallback = function(oSettings, oData) {
+    SmartTable.prototype.defaultStateSaveCallback = function(settings, data) {
         
         var smartTable = $(this).data('bs.smarttable');
         
@@ -390,11 +390,11 @@
             }
         });
         
-        var storedData = {
+        var storedData = $.extend({}, data, {
             'filterType': smartTable.filterType,
             'fastSearch': $(smartTable.options.fastSearchInput).val(),
             'customSearch': customSearch
-        };
+        });
         localStorage.setItem('smart_table_' + window.location.pathname, JSON.stringify(storedData));
     };
             
@@ -407,7 +407,7 @@
      * 
      * Can be overwritten directly in dataTableOptions
      */
-    SmartTable.prototype.defaultStateLoadCallback = function(oSettings) {
+    SmartTable.prototype.defaultStateLoadCallback = function(settings) {
         
         var storedData = JSON.parse(localStorage.getItem('smart_table_' + window.location.pathname));
         var smartTable = $(this).data('bs.smarttable');
@@ -430,7 +430,10 @@
                 SmartTable.prototype.setFieldValue($('*[data-custom-search-name="' + name + '"]'), storedData.customSearch[name]);
             }
         }
-
+        
+        if(typeof storedData.iLength !== 'undefined') {
+            return storedData;
+        }
     };
 
 
