@@ -43,7 +43,17 @@
             "reportingButton": null,
             "reportingZone": null,
             "zones": null, // needed to hide other zones when one is displayed
-            "selectedZoneButtonClass": null,
+            "selectedZoneButtonClass": null
+        },
+        'downloadOptions': {
+            "initUrl": null,
+            "stepUrl": null,
+            "endUrl": null,
+            "downloadGo": null,
+            "progress": null,
+            "useCustomSearch": false,
+            "useFastSearch": false,
+            "modal": null
         },
         'dataTableOptions': {
             "sServerMethod": "POST",
@@ -143,7 +153,7 @@
         this.filterType = FILTER_TYPE_NONE;
         
         var self = this;
-        
+
         $(this.options.customSearchGo).click(function(){
             $.proxy(self.options.fnLaunchCustomSearch, self)();
         });
@@ -178,10 +188,44 @@
     };
     
     
-    
-    
-    
-    
+    SmartTable.DEFAULTS.options.fnInitDownload = function() {
+        
+        if(this.downloadOptions.useCustomSearch === false) return;
+        
+        
+        $(this.downloadOptions.progress).splitprocess({
+            'initUrl': this.downloadOptions.initUrl.replace('__alias__', 'application_table_download'),
+            'stepUrl': this.downloadOptions.stepUrl
+        });
+        
+        var self = this;
+        
+        // add filter data to query
+        $(this.downloadOptions.progress).bind('process_split.before_launch', function(e){
+            var filterData = {};
+            $.proxy(self.addAjaxFilterData, self)(filterData);
+            e.postData = {};
+            e.postData.filter = filterData;
+        });
+
+        // redirect to document after dowload
+        $(this.downloadOptions.progress).bind('process_split.before_end', function(e, data){
+            document.location.href = self.downloadOptions.endUrl.replace('__id__', data.id);
+
+            if(null !== self.downloadOptions.modal) {
+                $(self.downloadOptions.modal).modal('hide');
+            }
+        });
+
+        $(this.downloadOptions.downloadGo).click(function(){
+            
+            if(null !== self.downloadOptions.modal) {
+                $(self.downloadOptions.modal).modal();
+            }
+            $(self.downloadOptions.progress).splitprocess('launch');
+        });
+        
+    };
     
     
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
@@ -196,10 +240,12 @@
         var allOptions = this.getOptions(options);
         this.options = allOptions.options;
         this.dataTableOptions = allOptions.dataTableOptions;
+        this.downloadOptions = allOptions.downloadOptions;
         
         $.proxy(this.options.fnInitFastSearch, this)();
         $.proxy(this.options.fnInitCustomSearch, this)();
         $.proxy(this.options.fnInitZoneDisplay, this)();
+        $.proxy(this.options.fnInitDownload, this)();
     };
     
     SmartTable.prototype.initQuery = function(table, options) {
@@ -224,6 +270,7 @@
         
         var baseOptions = $.extend({}, this.getDefaults().options, options.options);
         var dataTableOptions = $.extend({}, this.getDefaults().dataTableOptions, options.dataTableOptions);
+        var downloadOptions = $.extend({}, this.getDefaults().downloadOptions, options.downloadOptions);
 
         // manager state saving callbacks
         if(typeof dataTableOptions.stateSaveCallback === 'undefined') {
@@ -235,7 +282,8 @@
 
         return {
             options: baseOptions,
-            dataTableOptions: dataTableOptions
+            dataTableOptions: dataTableOptions,
+            downloadOptions: downloadOptions
         };
     };
     

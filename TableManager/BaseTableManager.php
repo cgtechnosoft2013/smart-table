@@ -9,7 +9,6 @@ abstract class BaseTableManager
     const NO_SEARCH = 0;
     const FAST_SEARCH = 1;
     const CUSTOM_SEARCH = 2;
-    const PARAM_LIST_SEPARATOR = ']__[';
     
     /**
      * @var Request 
@@ -74,64 +73,13 @@ abstract class BaseTableManager
 
     public function extactSearch()
     {
-        $this->searchType = $this->request->get('searchType', self::NO_SEARCH);
-
-        if($this->searchType == self::FAST_SEARCH) {
-            $this->extractFastSearchData();
-        } elseif($this->searchType == self::CUSTOM_SEARCH) {
-            $this->extractCustomSearchData();
-        }
-    }
-    
-    
-    /**
-     * Extract FastSearch data form request :
-     * POST param "fastSearch"
-     */
-    protected function extractFastSearchData()
-    {
-        $fastSearch = $this->request->get('fastSearch', null);
+        $extractor = new FilterExtractor();
+        $extractor->setRequest($this->request)
+                  ->extactSearch();
         
-        if($this->searchType == self::FAST_SEARCH && null != $fastSearch && '' != $fastSearch) {
-            
-            $this->searchType = self::FAST_SEARCH;
-            $this->fastSearch = $fastSearch;
-        }
-    }
-    
-    /**
-     * Extract FastSearch data form request :
-     * POST params starting with "customSearch-"
-     */
-    protected function extractCustomSearchData()
-    {
-        if($this->searchType != self::CUSTOM_SEARCH) {
-            return;
-        }
-        
-        foreach($this->request->request->all() as $key => $value) {
-            
-            if(substr($key, 0, 13) == 'customSearch-' && null != $value && '' != $value && '[""]' != $value) {
-                
-                $this->customSearch[substr($key, 13)] = $this->getParamValue($value);
-                $this->searchType = self::CUSTOM_SEARCH;
-            }
-        }
-    }
-    
-    /**
-     * Explode value string if contains list separator
-     * 
-     * @param string $value
-     * @return string|array
-     */
-    protected function getParamValue($value)
-    {
-        if (null !== json_decode($value) && $value !== '') {
-            return json_decode($value);
-        }
-        
-        return $value;
+        $this->searchType = $extractor->getSearchType();
+        $this->fastSearch = $extractor->getFastSearch();
+        $this->customSearch = $extractor->getCustomSearch();
     }
     
     /**
