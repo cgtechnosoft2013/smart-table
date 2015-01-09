@@ -1,11 +1,13 @@
 
 
 /**
- * 
- * 
+ * Download Part of SmartTable
  */
 var SmartTableModule = (function($, SmartTable) {
 
+    /**
+     * Default options
+     */
     SmartTable.DEFAULTS.downloadOptions = {
         "initUrl": null,
         "stepUrl": null,
@@ -17,6 +19,9 @@ var SmartTableModule = (function($, SmartTable) {
         "modal": null
     };
     
+    /**
+     * Init Download functionality
+     */
     SmartTable.DEFAULTS.options.fnInitDownload = function() {
         
         if(this.downloadOptions.useCustomSearch === false) return;
@@ -57,6 +62,11 @@ var SmartTableModule = (function($, SmartTable) {
     };
     
     
+    // PROTOTYPE CUSTOMISABLE FUNCTIONS
+    
+    /**
+     * Merge given options to default ones
+     */
     SmartTable.prototype.getDownloadOptions = function(options) {
         
         var downloadOptions = $.extend({}, this.getDefaults().downloadOptions, options.downloadOptions);
