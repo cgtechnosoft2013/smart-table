@@ -4,7 +4,7 @@
  * 
  * 
  */
-+function($) {
+var SmartTableModule = (function($) {
 
     var FILTER_TYPE_NONE = 0;
     var FILTER_TYPE_FAST = 1;
@@ -45,15 +45,19 @@
             "zones": null, // needed to hide other zones when one is displayed
             "selectedZoneButtonClass": null
         },
-        'downloadOptions': {
+        'actionOptions': [],
+        'defaultActionOptions': {
+            "actionGo": null, // button|link selector to launch action
+            "additionalFields": null,
+            "useCustomSearch": false,
+            "useFastSearch": false,
+            "useManualSelection": false,
+            "mnaualSelectionCallBack": null,
+            "useProcess": false,
             "initUrl": null,
             "stepUrl": null,
             "endUrl": null,
-            "downloadGo": null,
             "progress": null,
-            "useCustomSearch": false,
-            "useFastSearch": false,
-            "modal": null
         },
         'dataTableOptions': {
             "sServerMethod": "POST",
@@ -187,46 +191,31 @@
 
     };
     
+    SmartTable.DEFAULTS.options.fnInitActions = function() {
+        
+        if(typeof this.options.actionOptions !== 'undefined') {
+            for(var i=0;i<this.actionOptions.length;i++) {
+                
+                if(this.options.actionOptions.useProcess) {
+                    $.proxy(this.options.fnInitProcessAction, this)(this.actionOptions[i]);
+                } else {
+                    $.proxy(this.options.fnInitSimpleAction, this)(this.actionOptions[i]);
+                }
+            }
+        }
+    };
     
-    SmartTable.DEFAULTS.options.fnInitDownload = function() {
+    SmartTable.DEFAULTS.options.fnInitSimpleAction = function(actionParameters) {
         
-        if(this.downloadOptions.useCustomSearch === false) return;
-        
-        
-        $(this.downloadOptions.progress).splitprocess({
-            'initUrl': this.downloadOptions.initUrl.replace('__alias__', 'application_table_download'),
-            'stepUrl': this.downloadOptions.stepUrl
-        });
-        
-        var self = this;
-        
-        // add filter data to query
-        $(this.downloadOptions.progress).bind('process_split.before_launch', function(e){
-            var filterData = {};
-            $.proxy(self.addAjaxFilterData, self)(filterData);
-            e.postData = {};
-            e.postData.filter = filterData;
-        });
-
-        // redirect to document after dowload
-        $(this.downloadOptions.progress).bind('process_split.before_end', function(e, data){
-            document.location.href = self.downloadOptions.endUrl.replace('__id__', data.id);
-
-            if(null !== self.downloadOptions.modal) {
-                $(self.downloadOptions.modal).modal('hide');
-            }
-        });
-
-        $(this.downloadOptions.downloadGo).click(function(){
-            
-            if(null !== self.downloadOptions.modal) {
-                $(self.downloadOptions.modal).modal();
-            }
-            $(self.downloadOptions.progress).splitprocess('launch');
-        });
+        var a = 1;
         
     };
     
+    SmartTable.DEFAULTS.options.fnInitProcessAction = function(actionParameters) {
+        
+        var a = 1;
+        
+    };
     
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
     
@@ -245,7 +234,10 @@
         $.proxy(this.options.fnInitFastSearch, this)();
         $.proxy(this.options.fnInitCustomSearch, this)();
         $.proxy(this.options.fnInitZoneDisplay, this)();
-        $.proxy(this.options.fnInitDownload, this)();
+        $.proxy(this.options.fnInitActions, this)();
+        if(typeof this.options.fnInitDownload !== 'undefined') {
+            $.proxy(this.options.fnInitDownload, this)();
+        }
     };
     
     SmartTable.prototype.initQuery = function(table, options) {
@@ -270,19 +262,32 @@
         
         var baseOptions = $.extend({}, this.getDefaults().options, options.options);
         var dataTableOptions = $.extend({}, this.getDefaults().dataTableOptions, options.dataTableOptions);
-        var downloadOptions = $.extend({}, this.getDefaults().downloadOptions, options.downloadOptions);
+        
+        var downloadOptions = {};
+        if(typeof this.getDownloadOptions !== 'undefined') {
+            var downloadOptions = this.getDownloadOptions(options);
+        }
 
-        // manager state saving callbacks
+        // manage state saving callbacks
         if(typeof dataTableOptions.stateSaveCallback === 'undefined') {
             dataTableOptions.stateSaveCallback = this.defaultStateSaveCallback;
         }
         if(typeof dataTableOptions.stateLoadCallback === 'undefined') {
             dataTableOptions.stateLoadCallback = this.defaultStateLoadCallback;
         }
-
+        
+        // manage defaultActionOptions
+        var actionsOptions = [];
+        if(typeof options.actionOptions !== 'undefined') {
+            for(var i=0;i<options.actionOptions.length;i++) {
+                actionsOptions.push($.extend({}, this.getDefaults().defaultActionOptions, options.actionOptions[i]));
+            }
+        }
+        
         return {
             options: baseOptions,
             dataTableOptions: dataTableOptions,
+            actionsOptions: actionsOptions,
             downloadOptions: downloadOptions
         };
     };
@@ -515,5 +520,7 @@
 
     $.fn.smarttable = Plugin;
     $.fn.smarttable.Constructor = SmartTable;
+    
+    return SmartTable;
 
-}(jQuery);
+}(jQuery));
