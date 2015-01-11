@@ -5,50 +5,74 @@
  */
 var SmartTableModule = (function($, SmartTable) {
 
+    // check dependencies
+    if(typeof SmartTable.mainPart === 'undefined') {
+        alert('You shoud add SmartTable.js before SmartTableFilter.js');
+    }
+    
+    SmartTable.filterPart = true;
+
     var FILTER_TYPE_NONE = 0;
     var FILTER_TYPE_FAST = 1;
     var FILTER_TYPE_CUSTOM = 2;
+    
+    SmartTable.DEFAULTS.filterOptions = {
+        "fastSearchInput": null,
+        "fastSearchGo": null,
+        "fastSearchReset": null,
+        "fastSearchGoResetToggle": false,
 
-    SmartTable.DEFAULTS.options.fnLaunchFastSearch = function() {
+        "customSearchInputs": null,
+        "customSearchGo": null,
+        "customSearchReset": null,
+        "customSearchGoResetToggle": false,
+
+        // specific jarviswidget table part
+        "filterButton": null,
+        "filterZone": null,
+        "selectedZoneButtonClass": null
+    };
+
+    SmartTable.DEFAULTS.filterOptions.fnLaunchFastSearch = function() {
         
         this.filterType = FILTER_TYPE_FAST;
         
-        if(this.options.fastSearchGoResetToggle == true) {
-            $(this.options.fastSearchGo).hide();
-            $(this.options.fastSearchReset).show(); 
+        if(this.filterOptions.fastSearchGoResetToggle == true) {
+            $(this.filterOptions.fastSearchGo).hide();
+            $(this.filterOptions.fastSearchReset).show(); 
         }
         
         this.$dataTable.api().draw();
     };
     
     
-    SmartTable.DEFAULTS.options.fnLaunchCustomSearch = function() {
+    SmartTable.DEFAULTS.filterOptions.fnLaunchCustomSearch = function() {
         
         this.filterType = FILTER_TYPE_CUSTOM;
         
-        if(this.options.customSearchGoResetToggle == true) {
-            $(this.options.customSearchGo).hide();
-            $(this.options.customSearchReset).show();
+        if(this.filterOptions.customSearchGoResetToggle == true) {
+            $(this.filterOptions.customSearchGo).hide();
+            $(this.filterOptions.customSearchReset).show();
         }
         
         this.$dataTable.api().draw();
     };
     
-    SmartTable.DEFAULTS.options.fnResetSearch = function() {
+    SmartTable.DEFAULTS.filterOptions.fnResetSearch = function() {
         
         this.filterType = FILTER_TYPE_NONE;
         
-        if(this.options.fastSearchGoResetToggle == true) {
-            $(this.options.fastSearchReset).hide();
-            $(this.options.fastSearchGo).show();
+        if(this.filterOptions.fastSearchGoResetToggle == true) {
+            $(this.filterOptions.fastSearchReset).hide();
+            $(this.filterOptions.fastSearchGo).show();
         }
-        if(this.options.customSearchGoResetToggle == true) {
-            $(this.options.customSearchReset).hide();
-            $(this.options.customSearchGo).show();
+        if(this.filterOptions.customSearchGoResetToggle == true) {
+            $(this.filterOptions.customSearchReset).hide();
+            $(this.filterOptions.customSearchGo).show();
         }
         
-        $(this.options.fastSearchInput).val('');
-        $.each($(this.options.customSearchInputs), function(index, element){
+        $(this.filterOptions.fastSearchInput).val('');
+        $.each($(this.filterOptions.customSearchInputs), function(index, element){
             if($(element).is('select')){
                 if($(element).attr('multiple') != 'multiple'){
                     $(element).val($(element).find('option:first').val()).change();
@@ -66,67 +90,66 @@ var SmartTableModule = (function($, SmartTable) {
         this.$dataTable.api().draw();
     };
     
-    SmartTable.DEFAULTS.options.fnInitFastSearch = function() {
+    SmartTable.DEFAULTS.filterOptions.fnInitFastSearch = function() {
 
         this.filterType = FILTER_TYPE_NONE;
         
         var self = this;
 
-        $(this.options.fastSearchInput).keypress(function(e) {
+        $(this.filterOptions.fastSearchInput).keypress(function(e) {
             if(e.which == 13) {
-                $.proxy(self.options.fnLaunchFastSearch, self)();
+                $.proxy(self.filterOptions.fnLaunchFastSearch, self)();
             }
             else {
-                if(self.options.fastSearchGoResetToggle == true) {
-                    $(self.options.fastSearchReset).hide();
-                    $(self.options.fastSearchGo).show();
+                if(self.filterOptions.fastSearchGoResetToggle == true) {
+                    $(self.filterOptions.fastSearchReset).hide();
+                    $(self.filterOptions.fastSearchGo).show();
                 }
             }
         });
         
-        $(this.options.fastSearchGo).click(function(){
-            $.proxy(self.options.fnLaunchFastSearch, self)();
+        $(this.filterOptions.fastSearchGo).click(function(){
+            $.proxy(self.filterOptions.fnLaunchFastSearch, self)();
         });
         
-        $(this.options.fastSearchReset).click(function(){
-            $.proxy(self.options.fnResetSearch, self)();
+        $(this.filterOptions.fastSearchReset).click(function(){
+            $.proxy(self.filterOptions.fnResetSearch, self)();
         });
 
     };
     
-    SmartTable.DEFAULTS.options.fnInitCustomSearch = function() {
+    SmartTable.DEFAULTS.filterOptions.fnInitCustomSearch = function() {
 
         this.filterType = FILTER_TYPE_NONE;
         
         var self = this;
 
-        $(this.options.customSearchGo).click(function(){
-            $.proxy(self.options.fnLaunchCustomSearch, self)();
+        $(this.filterOptions.customSearchGo).click(function(){
+            $.proxy(self.filterOptions.fnLaunchCustomSearch, self)();
         });
         
-        $(this.options.customSearchReset).click(function(){
-            $.proxy(self.options.fnResetSearch, self)();
+        $(this.filterOptions.customSearchReset).click(function(){
+            $.proxy(self.filterOptions.fnResetSearch, self)();
         });
 
     };
     
     
-    SmartTable.DEFAULTS.options.fnInitZoneDisplay = function() {
+    SmartTable.DEFAULTS.filterOptions.fnInitZoneDisplay = function() {
 
         var self = this;
 
-        $(this.options.filterButton).click(function(){
+        $(this.filterOptions.filterButton).click(function(){
             
-            if( $(self.options.filterZone).is(':visible') ){
+            if( $(self.filterOptions.filterZone).is(':visible') ){
                 
-                $(this).removeClass(self.options.selectedZoneButtonClass);
-                $(self.options.filterZone).hide('blind', { direction: 'up'});
+                $(this).removeClass(self.filterOptions.selectedZoneButtonClass);
+                $(self.filterOptions.filterZone).hide('blind', { direction: 'up'});
                 
             } else {
                 
-                $(this).addClass(self.options.selectedZoneButtonClass);
-                $(self.options.zones).hide();
-                $(self.options.filterZone).show('blind', { direction: 'up'});
+                $(this).addClass(self.filterOptions.selectedZoneButtonClass);
+                $(self.filterOptions.filterZone).show('blind', { direction: 'up'});
             }
             
         });
@@ -136,16 +159,25 @@ var SmartTableModule = (function($, SmartTable) {
     /**
      * Perform initialization
      */
-    SmartTable.DEFAULTS.options.fnInitSearch = function() {
+    SmartTable.DEFAULTS.filterOptions.fnInitSearch = function() {
 
-        $.proxy(this.options.fnInitFastSearch, this)();
-        $.proxy(this.options.fnInitCustomSearch, this)();
-        $.proxy(this.options.fnInitZoneDisplay, this)();
+        $.proxy(this.filterOptions.fnInitFastSearch, this)();
+        $.proxy(this.filterOptions.fnInitCustomSearch, this)();
+        $.proxy(this.filterOptions.fnInitZoneDisplay, this)();
 
     };
 
 
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
+
+    /**
+     * Merge given options to default ones
+     */
+    SmartTable.prototype.getFilterOptions = function(options) {
+        
+        var filterOptions = $.extend({}, this.getDefaults().filterOptions, options.filterOptions);
+        return filterOptions;
+    };
 
     /**
      * add custom|fast seach parameters to Ajax data
@@ -158,12 +190,12 @@ var SmartTableModule = (function($, SmartTable) {
         }
 
         if(FILTER_TYPE_FAST === this.filterType) {
-            data.fastSearch = $(this.options.fastSearchInput).val();
+            data.fastSearch = $(this.filterOptions.fastSearchInput).val();
         }
 
         if(FILTER_TYPE_CUSTOM === this.filterType) {
 
-            $(this.options.customSearchInputs).each(function(){
+            $(this.filterOptions.customSearchInputs).each(function(){
                 var value = self.getFieldValue(this);
                 var name = $(this).data('custom-search-name');
                 data['customSearch-' + name] = value;
@@ -173,8 +205,6 @@ var SmartTableModule = (function($, SmartTable) {
         data['searchType'] = this.filterType;
     };
 
-
-    
     /**
      * Get value from different form elements
      */
@@ -222,7 +252,7 @@ var SmartTableModule = (function($, SmartTable) {
         var smartTable = $(this).data('bs.smarttable');
         
         var customSearch = {};
-        $(smartTable.options.customSearchInputs).each(function(){
+        $(smartTable.filterOptions.customSearchInputs).each(function(){
             if(typeof $(this).data('custom-search-name') !== 'undefined') {
                 var value = SmartTable.prototype.getFieldValue(this);
                 var name = $(this).data('custom-search-name');
@@ -232,7 +262,7 @@ var SmartTableModule = (function($, SmartTable) {
         
         var storedData = $.extend({}, data, {
             'filterType': smartTable.filterType,
-            'fastSearch': $(smartTable.options.fastSearchInput).val(),
+            'fastSearch': $(smartTable.filterOptions.fastSearchInput).val(),
             'customSearch': customSearch
         });
         localStorage.setItem('smart_table_' + window.location.pathname, JSON.stringify(storedData));
@@ -257,10 +287,10 @@ var SmartTableModule = (function($, SmartTable) {
 
         if(storedData.filterType === FILTER_TYPE_FAST) {
             smartTable.filterType = FILTER_TYPE_FAST;
-            $(smartTable.options.fastSearchInput).val(storedData.fastSearch);
-            if(smartTable.options.fastSearchGoResetToggle == true) {
-                $(smartTable.options.fastSearchReset).show();
-                $(smartTable.options.fastSearchGo).hide();
+            $(smartTable.filterOptions.fastSearchInput).val(storedData.fastSearch);
+            if(smartTable.filterOptions.fastSearchGoResetToggle == true) {
+                $(smartTable.filterOptions.fastSearchReset).show();
+                $(smartTable.filterOptions.fastSearchGo).hide();
             }
         }
         

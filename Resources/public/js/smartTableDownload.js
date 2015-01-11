@@ -5,6 +5,13 @@
  */
 var SmartTableModule = (function($, SmartTable) {
 
+    // check dependencies
+    if(typeof SmartTable.mainPart === 'undefined') {
+        alert('You shoud add SmartTable.js before SmartTableDownload.js');
+    }
+    
+    SmartTable.downloadPart = true;
+
     /**
      * Default options
      */
@@ -15,18 +22,17 @@ var SmartTableModule = (function($, SmartTable) {
         "downloadGo": null, // button|link selector to launch dl
         "progress": null,
         "useCustomSearch": false,
-        "useFastSearch": false,
+        "useFastSearch": false, // not yet implemented
         "modal": null
     };
     
     /**
      * Init Download functionality
      */
-    SmartTable.DEFAULTS.options.fnInitDownload = function() {
+    SmartTable.DEFAULTS.downloadOptions.fnInitDownload = function() {
         
         if(this.downloadOptions.useCustomSearch === false) return;
         
-
         $(this.downloadOptions.progress).splitprocess({
             'initUrl': this.downloadOptions.initUrl.replace('__alias__', 'application_table_download'),
             'stepUrl': this.downloadOptions.stepUrl
@@ -70,15 +76,6 @@ var SmartTableModule = (function($, SmartTable) {
     SmartTable.prototype.getDownloadOptions = function(options) {
         
         var downloadOptions = $.extend({}, this.getDefaults().downloadOptions, options.downloadOptions);
-        
-        // manage defaultActionOptions
-        var actionsOptions = [];
-        if(typeof options.actionOptions !== 'undefined') {
-            for(var i=0;i<options.actionOptions.length;i++) {
-                actionsOptions.push($.extend({}, this.getDefaults().defaultActionOptions, options.actionOptions[i]));
-            }
-        }
-        
         return downloadOptions;
     };
     

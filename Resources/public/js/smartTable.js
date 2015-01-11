@@ -13,6 +13,8 @@ var SmartTableModule = (function($) {
     };
 
     SmartTable.VERSION = '1.0.0';
+    
+    SmartTable.mainPart = true;
 
     SmartTable.DEFAULTS = {
         'options': {
@@ -21,36 +23,6 @@ var SmartTableModule = (function($) {
             "spinnerClass": 'fa fa-cog fa-spin fa-3x ajax-overlay-loader',
             "dropdownPageLength": null,
         },
-        'filterOptions': {
-            "fastSearchInput": null,
-            "fastSearchGo": null,
-            "fastSearchReset": null,
-            "fastSearchGoResetToggle": false,
-            
-            "customSearchInputs": null,
-            "customSearchGo": null,
-            "customSearchReset": null,
-            "customSearchGoResetToggle": false,
-            
-            // specific jarviswidget table part
-            "filterButton": null,
-            "filterZone": null,
-            "selectedZoneButtonClass": null
-        },
-        'actionOptions': [],
-        'defaultActionOptions': {
-            "actionGo": null, // button|link selector to launch action
-            "additionalFields": null,
-            "useCustomSearch": false,
-            "useFastSearch": false,
-            "useManualSelection": false,
-            "mnaualSelectionCallBack": null,
-            "useProcess": false,
-            "initUrl": null,
-            "stepUrl": null,
-            "endUrl": null,
-            "progress": null,
-        },
         'dataTableOptions': {
             "sServerMethod": "POST",
             "serverSide": true,
@@ -58,34 +30,6 @@ var SmartTableModule = (function($) {
         }
     };
     
-    
-
-    
-    SmartTable.DEFAULTS.options.fnInitActions = function() {
-        
-        if(typeof this.options.actionOptions !== 'undefined') {
-            for(var i=0;i<this.actionOptions.length;i++) {
-                
-                if(this.options.actionOptions.useProcess) {
-                    $.proxy(this.options.fnInitProcessAction, this)(this.actionOptions[i]);
-                } else {
-                    $.proxy(this.options.fnInitSimpleAction, this)(this.actionOptions[i]);
-                }
-            }
-        }
-    };
-    
-    SmartTable.DEFAULTS.options.fnInitSimpleAction = function(actionParameters) {
-        
-        var a = 1;
-        
-    };
-    
-    SmartTable.DEFAULTS.options.fnInitProcessAction = function(actionParameters) {
-        
-        var a = 1;
-        
-    };
     
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
     
@@ -100,15 +44,19 @@ var SmartTableModule = (function($) {
         this.options = allOptions.options;
         this.dataTableOptions = allOptions.dataTableOptions;
         this.downloadOptions = allOptions.downloadOptions;
+        this.filterOptions = allOptions.filterOptions;
+        this.actionOptions = allOptions.actionOptions;
         
-        if(typeof this.options.fnInitSearch !== 'undefined') {
-            $.proxy(this.options.fnInitSearch, this)();
+        if(typeof this.filterOptions.fnInitSearch !== 'undefined') {
+            $.proxy(this.filterOptions.fnInitSearch, this)();
         }
         
-        $.proxy(this.options.fnInitActions, this)();
-
-        if(typeof this.options.fnInitDownload !== 'undefined') {
-            $.proxy(this.options.fnInitDownload, this)();
+        if(typeof this.downloadOptions.fnInitDownload !== 'undefined') {
+            $.proxy(this.downloadOptions.fnInitDownload, this)();
+        }
+        
+        if(typeof this.actionOptions.fnInitActions !== 'undefined') {
+            $.proxy(this.actionOptions.fnInitActions, this)();
         }
     };
     
@@ -131,12 +79,22 @@ var SmartTableModule = (function($) {
         var baseOptions = $.extend({}, this.getDefaults().options, options.options);
         var dataTableOptions = $.extend({}, this.getDefaults().dataTableOptions, options.dataTableOptions);
         
+        var filterOptions = {};
+        if(typeof this.getFilterOptions !== 'undefined') {
+            filterOptions = this.getFilterOptions(options);
+        }
+        
         var downloadOptions = {};
         if(typeof this.getDownloadOptions !== 'undefined') {
-            var downloadOptions = this.getDownloadOptions(options);
+            downloadOptions = this.getDownloadOptions(options);
+        }
+        
+        var actionOptions = {};
+        if(typeof this.getActionOptions !== 'undefined') {
+            actionOptions = this.getActionOptions(options);
         }
 
-        // manage state saving callbacks
+        // manage state saving callbacks (save state in localStorage)
         if(typeof dataTableOptions.stateSaveCallback === 'undefined') {
             dataTableOptions.stateSaveCallback = this.defaultStateSaveCallback;
         }
@@ -144,19 +102,12 @@ var SmartTableModule = (function($) {
             dataTableOptions.stateLoadCallback = this.defaultStateLoadCallback;
         }
         
-        // manage defaultActionOptions
-        var actionsOptions = [];
-        if(typeof options.actionOptions !== 'undefined') {
-            for(var i=0;i<options.actionOptions.length;i++) {
-                actionsOptions.push($.extend({}, this.getDefaults().defaultActionOptions, options.actionOptions[i]));
-            }
-        }
-        
         return {
             options: baseOptions,
             dataTableOptions: dataTableOptions,
-            actionsOptions: actionsOptions,
-            downloadOptions: downloadOptions
+            downloadOptions: downloadOptions,
+            filterOptions: filterOptions,
+            actionOptions: actionOptions
         };
     };
     
@@ -225,7 +176,7 @@ var SmartTableModule = (function($) {
                 "data": function ( data ) {
                     
                     // complete query with filter values
-                    if(typeof self.options.fnInitSearch !== 'undefined') {
+                    if(typeof self.filterOptions.fnInitSearch !== 'undefined') {
                         self.addAjaxFilterData(data);
                     }
                 }
