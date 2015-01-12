@@ -82,13 +82,6 @@ var SmartTableModule = (function($, SmartTable) {
             }
             $(self.actionOptions.progress).splitprocess('launch');
         });
-        
-        // hide modal after action
-        $(this.actionOptions.progress).bind('process_split.before_end', function(e, data){
-            if(null !== self.actionOptions.modal) {
-                $(self.actionOptions.modal).modal('hide');
-            }
-        });
     };
     
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
