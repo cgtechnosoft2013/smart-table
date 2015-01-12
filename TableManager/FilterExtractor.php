@@ -33,14 +33,24 @@ class FilterExtractor
     /**
      * Set Request to manager to extract and organize data
      * 
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request|array $request
      * @return \Plan\TrainingBundle\DataTable\TrainingTableManager
      */
-    public function setRequest(Request $request)
+    public function setRequest($request)
     {
-        $this->searchType = $request->get('searchType', BaseTableManager::NO_SEARCH);
-        $this->fastSearch = $request->get('fastSearch', null);
-        $this->filterArray = $request->request->all();
+        if($request instanceof Request) {
+            
+            $this->searchType = $request->get('searchType', BaseTableManager::NO_SEARCH);
+            $this->fastSearch = $request->get('fastSearch', null);
+            $this->filterArray = $request->request->all();
+            
+        } elseif(is_array($request)) {
+            
+            $this->searchType = isset($request['searchType']) ? $request['searchType'] : BaseTableManager::NO_SEARCH;
+            $this->fastSearch = isset($request['fastSearch']) ? $request['fastSearch'] : null;
+            $this->filterArray = $request;
+            
+        }
         return $this;
     }
     

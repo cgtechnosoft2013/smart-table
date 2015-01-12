@@ -39,7 +39,7 @@ abstract class BaseTableManager
      * 
      * @var array 
      */
-    protected $sort;
+    protected $sort = array();
     
     /**
      * @var integer 
@@ -51,26 +51,26 @@ abstract class BaseTableManager
      */
     protected $offset;
 
-    abstract protected function getTotalCount();
+    abstract public function getTotalCount();
     
-    abstract protected function getFilteredCount();
+    abstract public function getFilteredCount();
     
-    abstract protected function getRows();
+    abstract public function getRows();
     
     abstract protected function getRowArray($row);
 
     /**
      * Set Request to manager to extract and organize data
      * 
-     * @param \Symfony\Component\HttpFoundation\Request $request
+     * @param \Symfony\Component\HttpFoundation\Request|array $request
      * @return \Plan\TrainingBundle\DataTable\TrainingTableManager
      */
-    public function setRequest(Request $request)
+    public function setRequest($request)
     {
         $this->request = $request;
         return $this;
     }
-
+    
     public function extactSearch()
     {
         $extractor = new FilterExtractor();
@@ -80,6 +80,8 @@ abstract class BaseTableManager
         $this->searchType = $extractor->getSearchType();
         $this->fastSearch = $extractor->getFastSearch();
         $this->customSearch = $extractor->getCustomSearch();
+        
+        return $this;
     }
     
     /**
@@ -108,6 +110,18 @@ abstract class BaseTableManager
         $this->offset = $this->request->get('start', 0);
     }
     
+    /**
+     * @param type $limit
+     * @param type $offset
+     * @return \SDLab\Bundle\SmartTableBundle\TableManager\BaseTableManager
+     */
+    public function setLimits($limit, $offset)
+    {
+        $this->limit = $limit;
+        $this->offset = $offset;
+        
+        return $this;
+    }
     
     /**
      * Create array formated to be send to dataTable
