@@ -160,8 +160,8 @@ var SmartTableModule = (function($) {
             if(typeof self.$dataTable.api !== 'undefined') {
                 self.$dataTable.api().page.len(nb).draw(); // v1.10
             } else {
-                $(self).dataTable().fnSettings()._iDisplayLength = nb; // v1.9
-                $(self).dataTable().fnDraw();
+                self.$dataTable.fnSettings()._iDisplayLength = nb; // v1.9
+                self.$dataTable.fnDraw();
             }
             
             

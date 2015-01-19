@@ -42,12 +42,11 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.fastSearchReset).show(); 
         }
         
-        if(typeof self.$dataTable.api !== 'undefined') {
+        if(typeof this.$dataTable.api !== 'undefined') {
             this.$dataTable.api().draw(); // v1.10
         } else {
-            $(this).dataTable().fnDraw(); // v1.9
+            this.$dataTable.fnDraw(); // v1.9
         }
-        
     };
     
     
@@ -60,10 +59,10 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.customSearchReset).show();
         }
         
-        if(typeof self.$dataTable.api !== 'undefined') {
+        if(typeof this.$dataTable.api !== 'undefined') {
             this.$dataTable.api().draw(); // v1.10
         } else {
-            $(this).dataTable().fnDraw(); // v1.9
+            this.$dataTable.fnDraw(); // v1.9
         }
     };
     
@@ -97,10 +96,10 @@ var SmartTableModule = (function($, SmartTable) {
             }
         });
         
-        if(typeof self.$dataTable.api !== 'undefined') {
+        if(typeof this.$dataTable.api !== 'undefined') {
             this.$dataTable.api().draw(); // v1.10
         } else {
-            $(this).dataTable().fnDraw(); // v1.9
+            this.$dataTable.fnDraw(); // v1.9
         }
     };
     
