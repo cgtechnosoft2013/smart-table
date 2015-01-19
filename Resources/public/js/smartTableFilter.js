@@ -42,7 +42,12 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.fastSearchReset).show(); 
         }
         
-        this.$dataTable.api().draw();
+        if(typeof self.$dataTable.api !== 'undefined') {
+            this.$dataTable.api().draw(); // v1.10
+        } else {
+            $(this).dataTable().fnDraw(); // v1.9
+        }
+        
     };
     
     
@@ -55,7 +60,11 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.customSearchReset).show();
         }
         
-        this.$dataTable.api().draw();
+        if(typeof self.$dataTable.api !== 'undefined') {
+            this.$dataTable.api().draw(); // v1.10
+        } else {
+            $(this).dataTable().fnDraw(); // v1.9
+        }
     };
     
     SmartTable.DEFAULTS.filterOptions.fnResetSearch = function() {
@@ -87,7 +96,12 @@ var SmartTableModule = (function($, SmartTable) {
                 $(element).val('');
             }
         });
-        this.$dataTable.api().draw();
+        
+        if(typeof self.$dataTable.api !== 'undefined') {
+            this.$dataTable.api().draw(); // v1.10
+        } else {
+            $(this).dataTable().fnDraw(); // v1.9
+        }
     };
     
     SmartTable.DEFAULTS.filterOptions.fnInitFastSearch = function() {
