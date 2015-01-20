@@ -178,6 +178,15 @@ var SmartTableModule = (function($) {
         // if just URL, add callback
         if(typeof this.dataTableOptions.ajax == 'string') {
             
+            // v1.9
+            this.dataTableOptions.fnServerParams = function(aoData) {
+                var filterData = {};
+                self.addAjaxFilterData(filterData);
+                self.addFilterData(aoData, filterData);
+                aoData.push( { "name": "more_data", "value": "my_value" } );
+            };
+            
+            // v1.10
             this.dataTableOptions.ajax = {
                 "url": this.dataTableOptions.ajax,
                 "type": "POST",
@@ -192,10 +201,25 @@ var SmartTableModule = (function($) {
         }
     };
     
+    /**
+     * DataTable v1.9
+     * add filterData to baseData (v1.9 query format)
+     * 
+     * @param {type} baseData
+     * @param {type} data
+     * @returns {unresolved}
+     */
+    SmartTable.prototype.addFilterData = function(baseData, filterData) {
+        for(var key in filterData) {
+            baseData.push({
+                'name': key,
+                'value': filterData[key],
+            });
+        }
+        return baseData;
+    };
 
     
-
-
     // SMARTTABLE PLUGIN DEFINITION
     // ============================
 
