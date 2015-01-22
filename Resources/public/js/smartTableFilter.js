@@ -42,10 +42,10 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.fastSearchReset).show(); 
         }
         
-        if(typeof this.$dataTable.api !== 'undefined') {
-            this.$dataTable.api().draw(); // v1.10
-        } else {
+        if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
+        } else {
+            this.$dataTable.api().draw(); // v1.10
         }
     };
     
@@ -59,10 +59,10 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.customSearchReset).show();
         }
         
-        if(typeof this.$dataTable.api !== 'undefined') {
-            this.$dataTable.api().draw(); // v1.10
-        } else {
+        if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
+        } else {
+            this.$dataTable.api().draw(); // v1.10
         }
     };
     
@@ -96,10 +96,10 @@ var SmartTableModule = (function($, SmartTable) {
             }
         });
         
-        if(typeof this.$dataTable.api !== 'undefined') {
-            this.$dataTable.api().draw(); // v1.10
-        } else {
+        if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
+        } else {
+            this.$dataTable.api().draw(); // v1.10
         }
     };
     

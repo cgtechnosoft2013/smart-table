@@ -30,6 +30,10 @@ var SmartTableModule = (function($) {
         }
     };
     
+    SmartTable.isV9 = function() {
+        return $.fn.dataTable.version.substring(0,3) == '1.9';
+    };
+    
     
     // PROTOTYPE CUSTOMISABLE FUNCTIONS
     
@@ -157,13 +161,12 @@ var SmartTableModule = (function($) {
 
             var nb = $(this).data('page-length');
             
-            if(typeof self.$dataTable.api !== 'undefined') {
-                self.$dataTable.api().page.len(nb).draw(); // v1.10
-            } else {
+            if(SmartTable.isV9()) {
                 self.$dataTable.fnSettings()._iDisplayLength = nb; // v1.9
                 self.$dataTable.fnDraw();
+            } else {
+                self.$dataTable.api().page.len(nb).draw(); // v1.10
             }
-            
             
         });
     };
@@ -178,26 +181,30 @@ var SmartTableModule = (function($) {
         // if just URL, add callback
         if(typeof this.dataTableOptions.ajax == 'string') {
             
-            // v1.9
-            this.dataTableOptions.fnServerParams = function(aoData) {
-                var filterData = {};
-                self.addAjaxFilterData(filterData);
-                self.addFilterData(aoData, filterData);
-                aoData.push( { "name": "more_data", "value": "my_value" } );
-            };
             
-            // v1.10
-            this.dataTableOptions.ajax = {
-                "url": this.dataTableOptions.ajax,
-                "type": "POST",
-                "data": function ( data ) {
-                    
-                    // complete query with filter values
-                    if(typeof self.filterOptions.fnInitSearch !== 'undefined') {
-                        self.addAjaxFilterData(data);
+            if(SmartTable.isV9()) {
+                // v1.9
+                this.dataTableOptions.fnServerParams = function(aoData) {
+                    var filterData = {};
+                    self.addAjaxFilterData(filterData);
+                    self.addFilterData(aoData, filterData);
+                    aoData.push( { "name": "more_data", "value": "my_value" } );
+                };
+            } else {
+                // v1.10
+                this.dataTableOptions.ajax = {
+                    "url": this.dataTableOptions.ajax,
+                    "type": "POST",
+                    "data": function ( data ) {
+
+                        // complete query with filter values
+                        if(typeof self.filterOptions.fnInitSearch !== 'undefined') {
+                            self.addAjaxFilterData(data);
+                        }
                     }
-                }
-            };
+                };
+            }
+
         }
     };
     
