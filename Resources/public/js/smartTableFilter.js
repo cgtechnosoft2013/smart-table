@@ -244,9 +244,9 @@ var SmartTableModule = (function($, SmartTable) {
             $(element).prop('checked', value);
         } else if ($(element).is('select') && $(element).attr('multiple')) {
              var arrayValue = JSON.parse(value)||[];
-             (element).val(arrayValue);
+             $(element).val(arrayValue).change();
         } else {
-            $(element).val(value);
+            $(element).val(value).change();
         }
     };
     
@@ -310,7 +310,7 @@ var SmartTableModule = (function($, SmartTable) {
         if(storedData.filterType === FILTER_TYPE_CUSTOM) {
             smartTable.filterType = FILTER_TYPE_CUSTOM;
             for(var name in storedData.customSearch) {
-                SmartTable.prototype.setFieldValue($('*[data-custom-search-name="' + name + '"]'), storedData.customSearch[name]);
+                SmartTable.prototype.setFieldValue($('*[data-custom-search-name="' + name + '"]:not("div")'), storedData.customSearch[name]);
             }
         }
         
