@@ -89,16 +89,31 @@ abstract class BaseTableManager
      */
     protected function extractSort()
     {
-        $columns = $this->request->get('columns');
-        $sortArray = $this->request->get('order', array());
-        
-        // add column name to sort Array
-        foreach($sortArray as $index => $sortColumnArray) {
-            $sortColumnArray['columnName'] = $columns[$sortColumnArray['column']]['name'];
-            $sortArray[$index] = $sortColumnArray;
-        }
+        if(null != $this->request->get('iSortCol_0', null) ) {
+            // dataTable V1.9
 
-        $this->sort = $sortArray;
+            $sortColumnNb = $this->request->get('iSortCol_0');
+            $sortColumnName = $this->request->get('mDataProp_'.$sortColumnNb);
+
+            $this->sort = array(
+                array(
+                    'columnName' => $sortColumnName,
+                    'dir' => $this->request->get('sSortDir_0')
+                )
+            );
+        } else {
+            // dataTable V1.10+
+            $columns = $this->request->get('columns');
+            $sortArray = $this->request->get('order', array());
+
+            // add column name to sort Array
+            foreach($sortArray as $index => $sortColumnArray) {
+                $sortColumnArray['columnName'] = $columns[$sortColumnArray['column']]['name'];
+                $sortArray[$index] = $sortColumnArray;
+            }
+
+            $this->sort = $sortArray;
+        }
     }
 
     /**
