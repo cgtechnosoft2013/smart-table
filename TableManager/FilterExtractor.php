@@ -3,6 +3,7 @@
 namespace SDLab\Bundle\SmartTableBundle\TableManager;
 
 use Symfony\Component\HttpFoundation\Request;
+use SDLab\Bundle\SmartTableBundle\TableManager\BaseTableManager;
 
 class FilterExtractor
 {    
@@ -41,13 +42,13 @@ class FilterExtractor
         if($request instanceof Request) {
             
             $this->searchType = $request->get('searchType', BaseTableManager::NO_SEARCH);
-            $this->fastSearch = $request->get('fastSearch', null);
+            $this->fastSearch = null == $request->get('fastSearch', null) ? null : BaseTableManager::secureString($request->get('fastSearch', null));
             $this->filterArray = $request->request->all();
             
         } elseif(is_array($request)) {
             
             $this->searchType = isset($request['searchType']) ? $request['searchType'] : BaseTableManager::NO_SEARCH;
-            $this->fastSearch = isset($request['fastSearch']) ? $request['fastSearch'] : null;
+            $this->fastSearch = isset($request['fastSearch']) ? BaseTableManager::secureString($request['fastSearch']) : null;
             $this->filterArray = $request;
             
         }
@@ -62,7 +63,7 @@ class FilterExtractor
     public function setFilter(array $filter)
     {
         $this->searchType = isset($filter['searchType']) ? $filter['searchType'] : BaseTableManager::NO_SEARCH;
-        $this->fastSearch = isset($filter['fastSearch']) ? $filter['fastSearch'] : null;
+        $this->fastSearch = isset($filter['fastSearch']) ? BaseTableManager::secureString($filter['fastSearch']) : null;
         $this->filterArray = $filter;
         return $this;
     }
@@ -111,7 +112,7 @@ class FilterExtractor
             
             if(substr($key, 0, 13) == 'customSearch-' && null != $value && '' != $value && '[""]' != $value) {
                 
-                $this->customSearch[substr($key, 13)] = $this->getParamValue($value);
+                $this->customSearch[substr(BaseTableManager::secureString($key), 13)] = $this->getParamValue($value);
                 $this->searchType = BaseTableManager::CUSTOM_SEARCH;
             }
         }
@@ -126,10 +127,10 @@ class FilterExtractor
     protected function getParamValue($value)
     {
         if (null !== json_decode($value) && $value !== '') {
-            return json_decode($value);
+            return json_decode(BaseTableManager::secureString($value));
         }
         
-        return $value;
+        return BaseTableManager::secureString($value);
     }
 
 }

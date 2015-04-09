@@ -92,13 +92,13 @@ abstract class BaseTableManager
         if(null != $this->request->get('iSortCol_0', null) ) {
             // dataTable V1.9
 
-            $sortColumnNb = $this->request->get('iSortCol_0');
-            $sortColumnName = $this->request->get('mDataProp_'.$sortColumnNb);
+            $sortColumnNb = intval($this->request->get('iSortCol_0'));
+            $sortColumnName = self::secureString($this->request->get('mDataProp_'.$sortColumnNb));
 
             $this->sort = array(
                 array(
                     'columnName' => $sortColumnName,
-                    'dir' => $this->request->get('sSortDir_0')
+                    'dir' => intval($this->request->get('sSortDir_0'))
                 )
             );
         } else {
@@ -108,8 +108,8 @@ abstract class BaseTableManager
 
             // add column name to sort Array
             foreach($sortArray as $index => $sortColumnArray) {
-                $sortColumnArray['columnName'] = $columns[$sortColumnArray['column']]['name'];
-                $sortArray[$index] = $sortColumnArray;
+                $sortColumnArray['columnName'] = self::secureString($columns[$sortColumnArray['column']]['name']);
+                $sortArray[self::secureString($index)] = $sortColumnArray;
             }
 
             $this->sort = $sortArray;
@@ -121,19 +121,19 @@ abstract class BaseTableManager
      */
     protected function extactLimits()
     {
-        $this->limit = $this->request->get('length', 0);
-        $this->offset = $this->request->get('start', 0);
+        $this->limit = intval($this->request->get('length', 0));
+        $this->offset = intval($this->request->get('start', 0));
     }
     
     /**
-     * @param type $limit
-     * @param type $offset
+     * @param integer $limit
+     * @param integer $offset
      * @return \SDLab\Bundle\SmartTableBundle\TableManager\BaseTableManager
      */
     public function setLimits($limit, $offset)
     {
-        $this->limit = $limit;
-        $this->offset = $offset;
+        $this->limit = intval($limit);
+        $this->offset = intval($offset);
         
         return $this;
     }
@@ -161,6 +161,16 @@ abstract class BaseTableManager
             $json['data'][] = $this->getRowArray($row);
         }
         return $json;
+    }
+    
+    /**
+     * Secure filter values (ensure there is no sql injection)
+     * 
+     * @param type $string
+     */
+    static public function secureString($string)
+    {
+        return mysql_real_escape_string($string);
     }
 
 }
