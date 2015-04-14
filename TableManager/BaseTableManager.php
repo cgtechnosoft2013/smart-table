@@ -164,13 +164,14 @@ abstract class BaseTableManager
     }
     
     /**
-     * Secure filter values (ensure there is no sql injection)
+     * Possibility to Secure (ensure there is no sql injection)
      * 
      * @param type $string
      */
     static public function secureString($string)
     {
-        return mysql_real_escape_string($string);
+        // no added security (managed by doctrine in main project)
+        return $string;
     }
 
 }
