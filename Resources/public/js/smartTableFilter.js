@@ -9,13 +9,13 @@ var SmartTableModule = (function($, SmartTable) {
     if(typeof SmartTable.mainPart === 'undefined') {
         alert('You shoud add SmartTable.js before SmartTableFilter.js');
     }
-    
+
     SmartTable.filterPart = true;
 
     var FILTER_TYPE_NONE = 0;
     var FILTER_TYPE_FAST = 1;
     var FILTER_TYPE_CUSTOM = 2;
-    
+
     SmartTable.DEFAULTS.filterOptions = {
         "fastSearchInput": null,
         "fastSearchGo": null,
@@ -34,42 +34,42 @@ var SmartTableModule = (function($, SmartTable) {
     };
 
     SmartTable.DEFAULTS.filterOptions.fnLaunchFastSearch = function() {
-        
+
         this.filterType = FILTER_TYPE_FAST;
-        
+
         if(this.filterOptions.fastSearchGoResetToggle == true) {
             $(this.filterOptions.fastSearchGo).hide();
-            $(this.filterOptions.fastSearchReset).show(); 
+            $(this.filterOptions.fastSearchReset).show();
         }
-        
+
         if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
         } else {
             this.$dataTable.api().draw(); // v1.10
         }
     };
-    
-    
+
+
     SmartTable.DEFAULTS.filterOptions.fnLaunchCustomSearch = function() {
-        
+
         this.filterType = FILTER_TYPE_CUSTOM;
-        
+
         if(this.filterOptions.customSearchGoResetToggle == true) {
             $(this.filterOptions.customSearchGo).hide();
             $(this.filterOptions.customSearchReset).show();
         }
-        
+
         if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
         } else {
             this.$dataTable.api().draw(); // v1.10
         }
     };
-    
+
     SmartTable.DEFAULTS.filterOptions.fnResetSearch = function() {
-        
+
         this.filterType = FILTER_TYPE_NONE;
-        
+
         if(this.filterOptions.fastSearchGoResetToggle == true) {
             $(this.filterOptions.fastSearchReset).hide();
             $(this.filterOptions.fastSearchGo).show();
@@ -78,7 +78,7 @@ var SmartTableModule = (function($, SmartTable) {
             $(this.filterOptions.customSearchReset).hide();
             $(this.filterOptions.customSearchGo).show();
         }
-        
+
         $(this.filterOptions.fastSearchInput).val('');
         $.each($(this.filterOptions.customSearchInputs), function(index, element){
             if($(element).is('select')){
@@ -95,18 +95,18 @@ var SmartTableModule = (function($, SmartTable) {
                 $(element).val('');
             }
         });
-        
+
         if(SmartTable.isV9()) {
             this.$dataTable.fnDraw(); // v1.9
         } else {
             this.$dataTable.api().draw(); // v1.10
         }
     };
-    
+
     SmartTable.DEFAULTS.filterOptions.fnInitFastSearch = function() {
 
         this.filterType = FILTER_TYPE_NONE;
-        
+
         var self = this;
 
         $(this.filterOptions.fastSearchInput).keypress(function(e) {
@@ -120,51 +120,51 @@ var SmartTableModule = (function($, SmartTable) {
                 }
             }
         });
-        
+
         $(this.filterOptions.fastSearchGo).click(function(){
             $.proxy(self.filterOptions.fnLaunchFastSearch, self)();
         });
-        
+
         $(this.filterOptions.fastSearchReset).click(function(){
             $.proxy(self.filterOptions.fnResetSearch, self)();
         });
 
     };
-    
+
     SmartTable.DEFAULTS.filterOptions.fnInitCustomSearch = function() {
 
         this.filterType = FILTER_TYPE_NONE;
-        
+
         var self = this;
 
         $(this.filterOptions.customSearchGo).click(function(){
             $.proxy(self.filterOptions.fnLaunchCustomSearch, self)();
         });
-        
+
         $(this.filterOptions.customSearchReset).click(function(){
             $.proxy(self.filterOptions.fnResetSearch, self)();
         });
 
     };
-    
-    
+
+
     SmartTable.DEFAULTS.filterOptions.fnInitZoneDisplay = function() {
 
         var self = this;
 
         $(this.filterOptions.filterButton).click(function(){
-            
+
             if( $(self.filterOptions.filterZone).is(':visible') ){
-                
+
                 $(this).removeClass(self.filterOptions.selectedZoneButtonClass);
                 $(self.filterOptions.filterZone).hide('blind', { direction: 'up'});
-                
+
             } else {
-                
+
                 $(this).addClass(self.filterOptions.selectedZoneButtonClass);
                 $(self.filterOptions.filterZone).show('blind', { direction: 'up'});
             }
-            
+
         });
 
     };
@@ -187,7 +187,7 @@ var SmartTableModule = (function($, SmartTable) {
      * Merge given options to default ones
      */
     SmartTable.prototype.getFilterOptions = function(options) {
-        
+
         var filterOptions = $.extend({}, this.getDefaults().filterOptions, options.filterOptions);
         return filterOptions;
     };
@@ -196,9 +196,9 @@ var SmartTableModule = (function($, SmartTable) {
      * add custom|fast seach parameters to Ajax data
      */
     SmartTable.prototype.addAjaxFilterData = function(data) {
-        
+
         var self = this;
-        
+
         if(FILTER_TYPE_NONE === this.filterType) {
         }
 
@@ -214,7 +214,7 @@ var SmartTableModule = (function($, SmartTable) {
                 data['customSearch-' + name] = value;
             });
         }
-        
+
         data['searchType'] = this.filterType;
     };
 
@@ -223,47 +223,53 @@ var SmartTableModule = (function($, SmartTable) {
      */
     SmartTable.prototype.getFieldValue = function(element) {
 
-        var value;
-        if ($(element).attr('type') === 'checkbox'){
+	var value;
+	if ($(element).attr('type') === 'checkbox'){
             value = $(element).prop('checked');
-        }else{
+	} else if ($(element).attr('type') === 'radio'){
+            var name = $(element).attr('name');
+            value = $('input[name='+name+']:checked').val();
+	} else {
             value = $(element).val();
-        }
-        if(value instanceof Array) {
+	}
+	if(value instanceof Array) {
             value = JSON.stringify(value)||[];
-        }
-        return value;
+	}
+	return value;
     };
-    
+
     /**
      * Set value from different form elements
      */
     SmartTable.prototype.setFieldValue = function(element, value) {
 
-        if ($(element).attr('type') === 'checkbox'){
+	if ($(element).attr('type') === 'checkbox'){
             $(element).prop('checked', value);
-        } else if ($(element).is('select') && $(element).attr('multiple')) {
-             var arrayValue = JSON.parse(value)||[];
-             $(element).val(arrayValue).change();
-        } else {
+	} else if ($(element).attr('type') === 'radio'){
+            var name = $(element).attr('name');
+            $('input[name='+name+'][value='+value+']').prop( "checked", true );
+	} else if ($(element).is('select') && $(element).attr('multiple')) {
+            var arrayValue = JSON.parse(value)||[];
+            $(element).val(arrayValue).change();
+	} else {
             $(element).val(value).change();
-        }
+	}
     };
-    
-    
+
+
     /**
      * Default StateSaveCallback
      * Allow to save fastSearch / customSeach / page / sort ...
      * Use DataTable stateSave functionality
-     * 
+     *
      * option stateSave in dataTableOptions as to be set to true
-     * 
+     *
      * Can be overwritten directly in dataTableOptions
      */
     SmartTable.prototype.defaultStateSaveCallback = function(settings, data) {
-        
+
         var smartTable = $(this).data('bs.smarttable');
-        
+
         var customSearch = {};
         $(smartTable.filterOptions.customSearchInputs).each(function(){
             if(typeof $(this).data('custom-search-name') !== 'undefined') {
@@ -272,7 +278,7 @@ var SmartTableModule = (function($, SmartTable) {
                 customSearch[name] = value;
             }
         });
-        
+
         var storedData = $.extend({}, data, {
             'filterType': smartTable.filterType,
             'fastSearch': $(smartTable.filterOptions.fastSearchInput).val(),
@@ -280,18 +286,18 @@ var SmartTableModule = (function($, SmartTable) {
         });
         localStorage.setItem('smart_table_' + window.location.pathname, JSON.stringify(storedData));
     };
-            
+
     /**
      * Default StateLoadCallback
      * Allow to save fastSearch / customSeach / page / sort ...
      * Use DataTable stateSave functionality
-     * 
+     *
      * option stateSave in dataTableOptions as to be set to true
-     * 
+     *
      * Can be overwritten directly in dataTableOptions
      */
     SmartTable.prototype.defaultStateLoadCallback = function(settings) {
-        
+
         var storedData = JSON.parse(localStorage.getItem('smart_table_' + window.location.pathname));
         var smartTable = $(this).data('bs.smarttable');
 
@@ -306,14 +312,14 @@ var SmartTableModule = (function($, SmartTable) {
                 $(smartTable.filterOptions.fastSearchGo).hide();
             }
         }
-        
+
         if(storedData.filterType === FILTER_TYPE_CUSTOM) {
             smartTable.filterType = FILTER_TYPE_CUSTOM;
             for(var name in storedData.customSearch) {
                 SmartTable.prototype.setFieldValue($('*[data-custom-search-name="' + name + '"]:not("div")'), storedData.customSearch[name]);
             }
         }
-        
+
         if(typeof storedData.iLength !== 'undefined') {
             return storedData;
         }
