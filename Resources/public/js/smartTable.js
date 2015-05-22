@@ -252,6 +252,10 @@ var SmartTableModule = (function($) {
                 case 'getDataTable':
                     var data = $(this).data('bs.smarttable');
                     return data.getDataTable();
+                case 'getLastAjaxExtraData':
+                    if (SmartTable.isV9()) {
+                        return  $(this).data('bs.smarttable').extraData;
+                    }
             }
         }
 
