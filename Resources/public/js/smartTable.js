@@ -191,6 +191,7 @@ var SmartTableModule = (function($) {
                     aoData.push( { "name": "more_data", "value": "my_value" } );
                 };
                 this.dataTableOptions.fnServerData = function(sSource, aoData, fnCallback, oSettings) {
+                    var overlay = new AjaxLoader(this);
                     oSettings.jqXHR = $.ajax({
                         "dataType": 'json',
                         "type": "POST",
@@ -198,6 +199,7 @@ var SmartTableModule = (function($) {
                         "data": aoData,
                         "success": function(data) {
                             self.extraData = data.extraData;
+                            overlay.remove();
                             return fnCallback(data);
                         },
                         "error": function (e) {
