@@ -158,7 +158,10 @@ abstract class BaseTableManager
 
         $rows = $this->getRows();
         foreach ($rows as $row) {
-            $json['data'][] = $this->getRowArray($row);
+            $rowArray = $this->getRowArray($row);
+
+            if(null != $rowArray)
+                $json['data'][] = $rowArray;
         }
         return $json;
     }
