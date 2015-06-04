@@ -30,7 +30,10 @@ var SmartTableModule = (function($, SmartTable) {
         // specific jarviswidget table part
         "filterButton": null,
         "filterZone": null,
-        "selectedZoneButtonClass": null
+        "selectedZoneButtonClass": null,
+
+        //If true, the first request to fill table will use pre-selected filters
+        "useFiltersToInitialiseData": false,
     };
 
     SmartTable.DEFAULTS.filterOptions.fnLaunchFastSearch = function() {
@@ -178,6 +181,9 @@ var SmartTableModule = (function($, SmartTable) {
         $.proxy(this.filterOptions.fnInitCustomSearch, this)();
         $.proxy(this.filterOptions.fnInitZoneDisplay, this)();
 
+        if (this.filterOptions.useFiltersToInitialiseData) {
+            this.filterType = FILTER_TYPE_CUSTOM;
+        }
     };
 
 

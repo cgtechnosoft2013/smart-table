@@ -62,11 +62,6 @@ var SmartTableModule = (function($) {
         if(typeof this.actionOptions.fnInitActions !== 'undefined') {
             $.proxy(this.actionOptions.fnInitActions, this)();
         }
-
-        if (this.options.useFiltersToInitialiseData !== 'undefined'
-            && this.options.useFiltersToInitialiseData) {
-            this.filterType = 2;
-        }
     };
 
     SmartTable.prototype.initQuery = function(table, options) {
