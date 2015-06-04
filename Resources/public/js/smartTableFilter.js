@@ -33,7 +33,7 @@ var SmartTableModule = (function($, SmartTable) {
         "selectedZoneButtonClass": null,
 
         //If true, the first request to fill table will use pre-selected filters
-        "useFiltersToInitialiseData": false,
+        "useFiltersToInitialiseData": false
     };
 
     SmartTable.DEFAULTS.filterOptions.fnLaunchFastSearch = function() {
