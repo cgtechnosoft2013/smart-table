@@ -25,7 +25,7 @@ var SmartTableModule = (function($, SmartTable) {
         "useProcess": false, // true, false or function
         "initUrl": null,
         "stepUrl": null,
-        'endUrl' : null,
+        'endUrl' : null, // not requiered, use to add/customize report
         "progress": null,
         "modal": null
     };
