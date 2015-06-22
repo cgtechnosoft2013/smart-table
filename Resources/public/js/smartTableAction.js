@@ -25,6 +25,7 @@ var SmartTableModule = (function($, SmartTable) {
         "useProcess": false, // true, false or function
         "initUrl": null,
         "stepUrl": null,
+        'endUrl' : null, // not requiered, use to add/customize report
         "progress": null,
         "modal": null
     };
@@ -58,7 +59,8 @@ var SmartTableModule = (function($, SmartTable) {
         
         $(this.actionOptions.progress).splitprocess({
             'initUrl': this.actionOptions.initUrl,
-            'stepUrl': this.actionOptions.stepUrl
+            'stepUrl': this.actionOptions.stepUrl,
+            'endUrl' : this.actionOptions.endUrl,
         });
 
         var self = this;
