@@ -192,6 +192,9 @@ var SmartTableModule = (function($) {
                 };
                 this.dataTableOptions.fnServerData = function(sSource, aoData, fnCallback, oSettings) {
                     var overlay = new AjaxLoader(this);
+                    if (oSettings.jqXHR){
+                        oSettings.jqXHR.abort();
+                    }
                     oSettings.jqXHR = $.ajax({
                         "dataType": 'json',
                         "type": "POST",
@@ -209,17 +212,27 @@ var SmartTableModule = (function($) {
                 };
             } else {
                 // v1.10
-                this.dataTableOptions.ajax = {
-                    "url": this.dataTableOptions.ajax,
-                    "type": "POST",
-                    "data": function ( data ) {
-
-                        // complete query with filter values
-                        if(typeof self.filterOptions.fnInitSearch !== 'undefined') {
-                            self.addAjaxFilterData(data);
-                        }
+                var url = this.dataTableOptions.ajax;
+                this.dataTableOptions.ajax = function (data, callback, settings) {
+                    if (settings.nTable.jqXHR){
+                        settings.nTable.jqXHR.abort();
                     }
-                };
+                    
+                    if(typeof self.filterOptions.fnInitSearch !== 'undefined') {
+                        self.addAjaxFilterData(data);
+                    }
+                    settings.nTable.jqXHR = $.ajax({
+                        "url": url,
+                        "type": "POST",
+                        "data": data,
+                        "dataType": 'json',
+                        "success": function (json) {
+                            settings.json = json;
+                            $(settings.oInstance).trigger('xhr', settings);
+                            return callback( json );
+                        },
+                    });
+                }
             }
 
         }
