@@ -33,7 +33,9 @@ var SmartTableModule = (function($, SmartTable) {
         "selectedZoneButtonClass": null,
 
         //If true, the first request to fill table will use pre-selected filters
-        "useFiltersToInitialiseData": false
+        "useFiltersToInitialiseData": false,
+        //if not null, input value used to clear smart-tables filter. Unit value = minute
+        "filterLocalStorageLifetime": null
     };
 
     SmartTable.DEFAULTS.filterOptions.fnLaunchFastSearch = function() {
@@ -290,6 +292,11 @@ var SmartTableModule = (function($, SmartTable) {
             'fastSearch': $(smartTable.filterOptions.fastSearchInput).val(),
             'customSearch': customSearch
         });
+        
+        if(smartTable.filterOptions.filterLocalStorageLifetime){
+            localStorage.setItem('smart_table_lifetime' + window.location.pathname, $.now());
+        }
+        
         localStorage.setItem('smart_table_' + window.location.pathname, JSON.stringify(storedData));
     };
 
@@ -306,6 +313,21 @@ var SmartTableModule = (function($, SmartTable) {
 
         var storedData = JSON.parse(localStorage.getItem('smart_table_' + window.location.pathname));
         var smartTable = $(this).data('bs.smarttable');
+        
+        if(smartTable.filterOptions.filterLocalStorageLifetime){
+            
+            var lifetime = localStorage.getItem('smart_table_lifetime' + window.location.pathname);
+            
+            if(lifetime){
+                var time = ($.now() - lifetime) / 60000;
+                
+                if(time > smartTable.filterOptions.filterLocalStorageLifetime){
+                    localStorage.removeItem('smart_table_lifetime' + window.location.pathname);
+                    localStorage.removeItem('smart_table' + window.location.pathname);
+                    return;
+                }
+            }
+        }
 
         if (storedData === null) return;
         if (typeof storedData.filterType === 'undefined') return;
