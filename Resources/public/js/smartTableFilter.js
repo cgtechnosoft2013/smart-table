@@ -34,6 +34,8 @@ var SmartTableModule = (function($, SmartTable) {
 
         //If true, the first request to fill table will use pre-selected filters
         "useFiltersToInitialiseData": false,
+        //If true, the first request to fill table will use pre-selected filters
+        "useFiltersToResetData": false,
         //if not null, input value used to clear smart-tables filter. Unit value = minute
         "filterLocalStorageLifetime": null
     };
@@ -73,7 +75,13 @@ var SmartTableModule = (function($, SmartTable) {
 
     SmartTable.DEFAULTS.filterOptions.fnResetSearch = function() {
 
-        this.filterType = FILTER_TYPE_NONE;
+
+
+        if (this.filterOptions.useFiltersToResetData) {
+            this.filterType = FILTER_TYPE_CUSTOM;
+        }else{
+            this.filterType = FILTER_TYPE_NONE;
+        }
 
         if(this.filterOptions.fastSearchGoResetToggle == true) {
             $(this.filterOptions.fastSearchReset).hide();
