@@ -34,7 +34,7 @@ var SmartTableModule = (function($, SmartTable) {
 
         //If true, the first request to fill table will use pre-selected filters
         "useFiltersToInitialiseData": false,
-        //If true, the first request to fill table will use pre-selected filters
+        //If true, filter type will be equal to FILTER_TYPE_CUSTOM to consider custom filters on the request
         "useFiltersToResetData": false,
         //if not null, input value used to clear smart-tables filter. Unit value = minute
         "filterLocalStorageLifetime": null
